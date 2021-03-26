@@ -23,7 +23,7 @@ public class connection {
 					admin.AdminCase();
 				case ("2"):
 					personType = "Employee";
-					Employee employee = new Employee();
+					Employee employee = new Employee("");
 					employee.EmployeeCase();
 					}
 			}
