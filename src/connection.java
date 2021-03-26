@@ -9,8 +9,7 @@ import java.util.Scanner;
 public class connection { 
 		public static void main(String[] args) throws SQLException {
 
-			Scanner scanner = new Scanner(System.in); 
-
+			Scanner scanner = new Scanner(System.in);
 			System.out.println("\n" + "What Would You Like To Log In As? Type the number" + "\n");
 			System.out.println("1: Admin");
 	    	System.out.println("2: Employee");
