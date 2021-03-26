@@ -58,12 +58,12 @@ public class Employee {
 
     }
 
-    public ResultSet getSin() throws SQLException {
+    public String getSin() throws SQLException {
         //initialize variable that will hold the statement to be executed
 		st = db.createStatement(); 
         partialQuery = ("SELECT sin FROM customer WHERE sin = " + sin);
         ResultSet rs = st.executeQuery(partialQuery);
-        return rs;
+        return rs.getString(1);
     }
 
     public void setSin (BigInteger newSin) throws SQLException {
