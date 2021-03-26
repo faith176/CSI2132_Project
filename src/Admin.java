@@ -12,6 +12,7 @@ public class Admin {
   private String whereCondition;
   private String partialQuery;
   private String AdminTask;
+  private String news;
   
   private Connection db;
   private Statement st; 
