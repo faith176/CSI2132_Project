@@ -27,15 +27,8 @@ public class connection {
 					Employee employee = new Employee();
 					employee.EmployeeCase();
 					}
-					
-
 			}
-
-				
-
-			
 		}
-	}
 
 
 
