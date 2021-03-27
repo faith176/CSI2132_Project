@@ -44,7 +44,7 @@ public class Admin {
 	  Scanner scanner = new Scanner(System.in);  // Create a Scanner object
 
 	  while (AdminTask != "0") {
-	    System.out.println("\n" + "Welcome Admin! What would you like to do? Type the corresponding number" + "\n");
+	    System.out.println("\n" + "Welcome Admin! What would you like to do? Type the corresponding number:" + "\n");
 	    System.out.println("1: Select");
 	    System.out.println("2: Insert");
 	    System.out.println("3: Select");
