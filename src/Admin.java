@@ -42,10 +42,14 @@ public class Admin {
   public void AdminCase() throws SQLException {
 	  
 	  Scanner scanner = new Scanner(System.in);  // Create a Scanner object
+
+	  while (AdminTask != "0") {
 	    System.out.println("\n" + "Welcome Admin! What would you like to do? Type the corresponding number" + "\n");
 	    System.out.println("1: Select");
 	    System.out.println("2: Insert");
 	    System.out.println("3: Select");
+		System.out.println("0: Exit");
+
 	    AdminTask = scanner.nextLine();
 	    
 	    switch(AdminTask) {
@@ -58,7 +62,13 @@ public class Admin {
 			case ("3"):
 				AdminTask = "Delete";
 				break;
+			case ("0"):
+				System.out.println("--- Logging out of admin...");
+				return;
+			default:
+				System.out.println("--- Please enter a valid number.");
 		}
+
 	    	System.out.println("Task selected is: " + AdminTask + "\n"); 
 	    		
 	    	System.out.println("Input column(s) to " + AdminTask + ": "); 
@@ -78,19 +88,24 @@ public class Admin {
 	    		whereCondition = "";
 	    	}
 
-		switch(AdminTask) {
-	    	case ("Select"):
-				printResultSet(select());
-				break;
-			case ("Insert"):
-				insert();
-				break;
-			case ("Delete"):
-				delete();
-				break;
+			switch(AdminTask) {
+				case ("Select"):
+					printResultSet(select());
+					break;
+				case ("Insert"):
+					insert();
+					break;
+				case ("Delete"):
+					delete();
+					break;
+				default:
+					System.out.println("--- None of the cases Select/Insert/Delete were selected.");
+					break;
+			}
+			//adds a space after last output
+			System.out.print("");	
+		
 		}
-		//adds a space after last output
-		System.out.print("");	   
 	}
   
   public ResultSet select() throws SQLException {
