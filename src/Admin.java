@@ -12,7 +12,6 @@ public class Admin {
   private String whereCondition;
   private String partialQuery;
   private String AdminTask;
-  private String news;
   
   private Connection db;
   private Statement st; 
@@ -27,8 +26,9 @@ public class Admin {
 	}
 		//attempts to connect to the database, needs password and username
 	  try {
-			this.db = DriverManager.getConnection("jdbc:postgresql://web0.site.uottawa.ca:15432/group_b03_g30"
-			,"oades097", "University917");
+
+		//DATABASE CONNECTION NOT WORKING NEED HELP 
+		this.db = DriverManager.getConnection();
 			//initialize variable that will hold the statement to be executed
 			this.st = db.createStatement();
 	  } catch(SQLException ex) {
@@ -46,33 +46,48 @@ public class Admin {
 	    System.out.println("3: Select");
 	    AdminTask = scanner.nextLine();
 	    
-	
 	    switch(AdminTask) {
 	    	case ("1"):
 	    		AdminTask = "Select";
-	    		System.out.println("Task selected is: " + AdminTask + "\n");  // Output user input
+				break;
+			case ("2"):
+				AdminTask = "Insert";
+				break;
+			case ("3"):
+				AdminTask = "Delete";
+				break;
+		}
+	    	System.out.println("Task selected is: " + AdminTask + "\n");  // Output user input
 	    		
-	    		System.out.println("Input column(s) to select: ");  // Output user input
-	    		column = scanner.nextLine();
+	    	System.out.println("Input column(s) to " + AdminTask + ": ");  // Output user input
+	    	column = scanner.nextLine();
 	    		
-	    		System.out.println("Input table(s) to select: ");  // Output user input
-	    		table = scanner.nextLine();
+	    	System.out.println("Input table(s) to " + AdminTask + ": ");  // Output user input
+	    	table = scanner.nextLine();
 	    		
-	    		System.out.println("Would you like a where condition, Type Y or N: ");  // Output user input
+	    	System.out.println("Would you like a where condition, Type Y or N: ");  // Output user input
+	    	whereCondition = scanner.nextLine();
+	    		
+	    	if (whereCondition == "Y") {
+	    		System.out.println("Input where condition: ");  // Output user input
 	    		whereCondition = scanner.nextLine();
-	    		
-	    		if (whereCondition == "Y") {
-	    			System.out.println("Input where condition: ");  // Output user input
-	    			whereCondition = scanner.nextLine();
-	    		}
-	    		else {
-	    			whereCondition = "";
-	    		}
-	    		
-	    		//calls on select function
-	    		printResultSet(select());
-	    }
-	   
+	    	}
+	    	else {
+	    		whereCondition = "";
+	    	}
+
+
+		switch(AdminTask) {
+	    	case ("Select"):
+				printResultSet(select());
+				break;
+			case ("Insert"):
+				insert();
+				break;
+			case ("Delete"):
+				delete();
+				break;
+		}	   
 	}
   
   public ResultSet select() throws SQLException {
@@ -103,7 +118,7 @@ public class Admin {
 			else {
 				partialQuery = ("INSERT " + column + " FROM " + table);
 			}
-			ResultSet rs = st.executeQuery(partialQuery);
+			st.executeQuery(partialQuery);
   }
 
   
@@ -118,7 +133,7 @@ public class Admin {
 			else {
 				partialQuery = ("DELETE " + column + " FROM " + table);
 			}
-			ResultSet rs = st.executeQuery(partialQuery);
+			st.executeQuery(partialQuery);
   }
   
   
