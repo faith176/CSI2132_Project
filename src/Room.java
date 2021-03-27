@@ -40,7 +40,7 @@ public class Room {
 		try {
 			  //DATABASE CONNECTION NOT WORKING NEED HELP 
 			  this.db = DriverManager.getConnection("jdbc:postgresql://web0.site.uottawa.ca:15432/group_b03_g30"
-			  ,"nribn011", "1Q@aw3ZSE$");
+			  ,"elu032", "Qw300114727oP!");
 			  //initialize variable that will hold the statement to be executed
 			  this.st = db.createStatement();
 		} catch(SQLException ex) {

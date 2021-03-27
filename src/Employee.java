@@ -36,7 +36,7 @@ public class Employee {
     try {
           //DATABASE CONNECTION NOT WORKING NEED HELP 
           this.db = DriverManager.getConnection("jdbc:postgresql://web0.site.uottawa.ca:15432/group_b03_g30"
-          ,"oades097", "University917");
+          ,"elu032", "Qw300114727oP!");
           //initialize variable that will hold the statement to be executed
           this.st = db.createStatement();
           
@@ -172,8 +172,15 @@ public class Employee {
 		manager_sin = scanner.nextLine();
     	//System.out.println("SHSHS");
 		st = db.createStatement(); 
-        partialQuery = ("INSERT INTO employee VALUES (" + sin + "," + first_name + "," + middle_name + "," + last_name + "," + address + "," + salary + "," + manager_sin + ")");
-        ResultSet rs = st.executeQuery(partialQuery);
+        //partialQuery = ("INSERT INTO employee VALUES (" + sin + ",'" + first_name + "','" + middle_name + "','" + last_name + "','" + address + "'," + salary + "," + manager_sin + ")");
+        
+        st.executeUpdate("INSERT INTO employee VALUES (" + sin + ",'" + first_name + "','" + middle_name + "','" + last_name + "','" + address + "'," + salary + "," + manager_sin + ")");
+        
+        
+        //st.executeQuery(partialQuery);
+        //String secondQuery = ("SELECT * FROM employee WHERE sin =" + sin + ")");
+        //ResultSet rs = st.executeQuery(secondQuery);
+        //printResultSet(rs);
         System.out.println("\n\n" + "--- employee account created" + "\n\n");
     }
 
