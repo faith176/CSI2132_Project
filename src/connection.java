@@ -29,7 +29,9 @@ public class connection {
 					case ("3"):
 						personType = "Customer";
 						Customer customer = new Customer("");
-						customer.CustomerCase();
+						// customer.CustomerCase();
+						customer.sin = "123456789";
+						customer.createBooking();
 						break;
 					case ("0"):
 						System.out.println("Thank you for using our service. Goodbye!");

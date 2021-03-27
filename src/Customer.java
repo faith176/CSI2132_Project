@@ -8,12 +8,22 @@ import java.sql.Statement;
 import java.util.Scanner; 
 
 public class Customer {
-    private String sin;
+    protected String sin;
     private String firstName;
     private String middleName;
     private String lastName;
     private String address;
     private String date_of_registration;
+
+    private String view_type;
+    private String occupants;
+    private String arrival_date;
+    private String departure_date;
+    private String hotel_id;
+    private String parent_brand;
+    private String room_num;
+    private String anythingAvailiable;
+
 
     private String accountAlready;
     private String partialQuery;
@@ -70,8 +80,11 @@ public class Customer {
             this.date_of_registration = String.valueOf(java.time.LocalDate.now());
             createCustomerAccount();
 		}
+
+        getandPrintCustomerInfo();
         System.out.println("\n" + "You are now logged in");
         loggedInTask();
+        scanner.close();
     }
 
     public void loggedInTask() throws SQLException {
@@ -114,7 +127,6 @@ public class Customer {
             System.out.println(lastName);
             System.out.println(address);
             System.out.println(date_of_registration);
-
     }
 
     //Will create a new customer account
@@ -124,14 +136,68 @@ public class Customer {
         st.executeQuery(partialQuery);
     }
 
-    public boolean createBooking() {
+    public boolean createBooking() throws SQLException {
         Scanner scanner2 = new Scanner(System.in);
+        ResultSet rs;
         System.out.println("Let's create a booking, we will now check for your preferences" + "\n");
 
-        System.out.println("Please Enter Your first name:" + "\n");
+        //gets the users specified brand
+        System.out.println("Which brand would you like to stay with" + "\n");
+        st = db.createStatement(); 
+        partialQuery = ("SELECT pbname FROM parent_brand");
+        rs = st.executeQuery(partialQuery);
+        printResultSet(rs);
+        parent_brand = scanner2.nextLine();
+
+        //gives the user the avaliable locations of hotels from their specified brand
+        System.out.println("Which location do you prefer of the availiable choices. Please input the hotel_id of your choice" + "\n");
+        st = db.createStatement(); 
+        partialQuery = ("SELECT hotel_id, physical_address FROM parent_brand,hotel WHERE parent_brand.pbname = hotel.pbname AND parent_brand.pbname = '" + parent_brand + "'");
+        rs = st.executeQuery(partialQuery);
+        printResultSet(rs);
+        hotel_id = scanner2.nextLine();
+
+        //gets the view the user wants
+        System.out.println("These are the avaliable views in your hotel, input you choice");
+        partialQuery = ("SELECT room_num, view_type FROM parent_brand,hotel,room WHERE parent_brand.pbname = hotel.pbname AND hotel.hotel_id = room.hotel_id AND parent_brand.pbname = '"  + parent_brand + "' AND hotel.hotel_id = '" + hotel_id + "'");
+        rs = st.executeQuery(partialQuery);
+        printResultSet(rs);
+        view_type = scanner2.nextLine();
+
+        //gets the amount of occupants
+        System.out.println("How many occupants?");
+        occupants = scanner2.nextLine();
+
+        
+        System.out.println("These are the possible rooms that fit your preferences please pick one. Input the room number" + "\n");
+        partialQuery = ("SELECT room_num, extension_capabilities, other_amenities FROM parent_brand,hotel,room WHERE parent_brand.pbname = hotel.pbname AND hotel.hotel_id = room.hotel_id AND parent_brand.pbname = '"  + parent_brand + "' AND hotel.hotel_id = '" + hotel_id + "' AND room.view_type = '" + view_type+ "' AND room.capacity >= " + occupants);
+        rs = st.executeQuery(partialQuery);
+        printResultSet(rs);
+        // while (rs.next()){
+        //     anythingAvailiable = rs.getString(1);
+        //     }
+        // if (anythingAvailiable.equals("")) {
+        //     System.out.println("No rooms match your preferences, press 0 to start again");
+        // }
+        // else if (!anythingAvailiable.equals("")) {
+        //     room_num = scanner2.nextLine();
+        // }
+        room_num = scanner2.nextLine();
+
+        System.out.println("What Arrival Date, use YYYY-MM-DD format");
+        arrival_date = scanner2.nextLine();
+
+        System.out.println("What Departure Date, use YYYY-MM-DD format");
+        departure_date = scanner2.nextLine();
+
+        System.out.println("Checking room avliability");
+
+        Room potencialRoom = new Room(departure_date, arrival_date, room_num, hotel_id);
+        System.out.println(potencialRoom.roomFree(departure_date, arrival_date, room_num, hotel_id));
+
+        scanner2.close();
         return true;
     }
-
 
     public ResultSet currentBookings() throws SQLException {
         st = db.createStatement(); 
@@ -160,19 +226,6 @@ public class Customer {
 		st = db.createStatement(); 
         partialQuery = ("UPDATE sin = " + newSin + " FROM customer WHERE sin = " + sin);
         st.executeQuery(partialQuery);
-    }
-
-
-    public String execute () throws SQLException {
-        //initialize variable that will hold the statement to be executed
-		st = db.createStatement(); 
-        partialQuery = ("SELECT first_name FROM customer WHERE sin = 123456789");
-        ResultSet rs = st.executeQuery(partialQuery);
-        while (rs.next()){
-        System.out.println(rs.getString("first_name"));
-        //System.out.println(rs.getString(1));
-        }
-        return "rs.getString(1);";
     }
 
     public String getFirstName () throws SQLException {
