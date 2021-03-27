@@ -17,11 +17,10 @@ public class Customer {
 
     private String accountAlready;
     private String partialQuery;
-
-    
+    private String customerTask;
 
     private Connection db;
-    private Statement st; 
+    private Statement st;
 
     public Customer(String sin) {
         this.sin = sin;
@@ -50,12 +49,12 @@ public class Customer {
         System.out.println("\n" + "Do you already have an Account, Y or N. If you type N, you will be asked to make a new account" + "\n");
 		accountAlready = scanner.nextLine();
 
-		if (accountAlready == "Y") {
+		if (accountAlready.equals("Y")) {
             System.out.println("Enter Customer SIN to login: ");
             //sets the sin number as the one the user inputted, can retrieve data for this sin now
             this.sin = scanner.nextLine();
         }
-	    else {
+	    else if (accountAlready.equals("N")) {
             System.out.println("Please Enter Your SIN number to log in:" + "\n");
             this.sin = scanner.nextLine();
             System.out.println("Please Enter Your first name:" + "\n");
@@ -66,29 +65,58 @@ public class Customer {
             this.lastName = scanner.nextLine();
             System.out.println("Please Enter Your address:" + "\n");
             this.sin = scanner.nextLine();
-        
             //sets the value of to current time
             this.date_of_registration = String.valueOf(java.time.LocalDate.now());
             createCustomerAccount();
 		}
+        loggedInTask();
+    }
+
+    public void loggedInTask() throws SQLException {
+        Scanner scanner = new Scanner(System.in);
+        while (customerTask != "0") {
+            System.out.println("You are now logged in");
+            System.out.println("What would you like to do?");
+
+            System.out.println("0: To go back" + "\n");
+            System.out.println("1: View current Bookings");
+            System.out.println("2: View current Rentings");
+            System.out.println("3: Create A New Booking" + "\n");
+    
+            customerTask = scanner.nextLine();
+    
+            switch(customerTask) {
+                case ("1"):
+                    currentBookings();
+                    break;
+                case ("2"):
+                    currentRentings();
+                    break;
+                case ("3"):
+                    createBooking();
+                    break;
+            }
+        }
     }
 
     //Will create a new customer account
     public void createCustomerAccount() throws SQLException {
         st = db.createStatement(); 
-        partialQuery = ("INSERT INTO CUSTOMER VALUES (" + sin + ", " + firstName + ", " + middleName + ", " + lastName + ", " + address+ ", " + date_of_registration +")" );
+        partialQuery = ("INSERT INTO customer VALUES (" + sin + ", " + firstName + ", " + middleName + ", " + lastName + ", " + address+ ", " + date_of_registration +")" );
         st.executeQuery(partialQuery);
     }
 
     public void createBooking() {
+        Scanner scanner2 = new Scanner(System.in);
+        System.out.println("Let's create a booking, we will now check for your preferences" + "\n");
 
-
+        System.out.println("Please Enter Your first name:" + "\n");
     }
 
 
     public void currentBookings() throws SQLException {
         st = db.createStatement(); 
-        partialQuery = ("SELECT * FROM bookings WHERE sin = " + sin);
+        partialQuery = ("SELECT * FROM booking WHERE sin = " + sin);
         ResultSet rs = st.executeQuery(partialQuery);
         printResultSet(rs);
     }
