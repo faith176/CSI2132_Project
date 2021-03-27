@@ -69,28 +69,28 @@ public class Customer {
             this.date_of_registration = String.valueOf(java.time.LocalDate.now());
             createCustomerAccount();
 		}
+        System.out.println("\n" + "You are now logged in");
         loggedInTask();
     }
 
     public void loggedInTask() throws SQLException {
         Scanner scanner = new Scanner(System.in);
-        while (customerTask != "0") {
-            System.out.println("You are now logged in");
-            System.out.println("What would you like to do?");
-
-            System.out.println("0: To go back" + "\n");
+        //default value
+        customerTask = "1";
+        while (!customerTask.equals("0")) {
+            System.out.println("\n" + "What would you like to do?");
+            System.out.println("0: To go back");
             System.out.println("1: View current Bookings");
             System.out.println("2: View current Rentings");
             System.out.println("3: Create A New Booking" + "\n");
     
             customerTask = scanner.nextLine();
-    
             switch(customerTask) {
                 case ("1"):
-                    currentBookings();
+                    printResultSet(currentBookings());
                     break;
                 case ("2"):
-                    currentRentings();
+                    printResultSet(currentRentings());
                     break;
                 case ("3"):
                     createBooking();
@@ -106,26 +106,28 @@ public class Customer {
         st.executeQuery(partialQuery);
     }
 
-    public void createBooking() {
+    public boolean createBooking() {
         Scanner scanner2 = new Scanner(System.in);
         System.out.println("Let's create a booking, we will now check for your preferences" + "\n");
 
         System.out.println("Please Enter Your first name:" + "\n");
+        return true;
     }
 
 
-    public void currentBookings() throws SQLException {
+    public ResultSet currentBookings() throws SQLException {
         st = db.createStatement(); 
         partialQuery = ("SELECT * FROM booking WHERE sin = " + sin);
         ResultSet rs = st.executeQuery(partialQuery);
-        printResultSet(rs);
+        return rs;
+        
     }
 
-    public void currentRentings() throws SQLException {
+    public ResultSet currentRentings() throws SQLException {
         st = db.createStatement(); 
         partialQuery = ("SELECT * FROM renting WHERE sin = " + sin);
         ResultSet rs = st.executeQuery(partialQuery);
-        printResultSet(rs);
+        return rs;
     }
 
     public String getSin() throws SQLException {
