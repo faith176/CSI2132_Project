@@ -29,6 +29,24 @@ public class Room {
         this.end = dateToInt(end);
         this.room_num = room_num;
         this.hotel_id = hotel_id;
+			//try catch statement checks to see if the appropriate library has been added
+			try {
+				Class.forName("org.postgresql.Driver");
+			  } catch (ClassNotFoundException e) {
+				System.err.println("Where is your PostgreSQL Driver" + "Include in your library path!");
+				e.printStackTrace();
+	  }
+		  //attempts to connect to the database, needs password and username
+		try {
+			  //DATABASE CONNECTION NOT WORKING NEED HELP 
+			  this.db = DriverManager.getConnection("jdbc:postgresql://web0.site.uottawa.ca:15432/group_b03_g30"
+			  ,"oades097", "University917");
+			  //initialize variable that will hold the statement to be executed
+			  this.st = db.createStatement();
+		} catch(SQLException ex) {
+			  System.err.println("Error get information from database");
+			  ex.printStackTrace();
+		  }
     }
 
     public boolean roomFree (String start, String end, String room_num, String hotel_id){
