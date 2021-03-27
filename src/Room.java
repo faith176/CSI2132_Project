@@ -36,7 +36,7 @@ public class Room {
         //check booking
             //SELECT * FROM booking WHERE room_num = this.room_num AND hotel_id = this.hotel_id ORDER BY arrival_date ASC;
             //make sure the arrival date of an existing entry doesn't overlap the departure date of the new one
-            select("SELECT * FROM booking WHERE room_num = " + this.room_num + " AND hotel_id = " + this.hotel_id + " ORDER BY arrival_date ASC;");
+            //select("SELECT * FROM booking WHERE room_num = " + this.room_num + " AND hotel_id = " + this.hotel_id + " ORDER BY arrival_date ASC;");
 
             //SELECT * FROM booking WHERE room_num = this.room_num AND hotel_id = this.hotel_id ORDER BY departure_date ASC;
             //make sure the departure date of an existing entry doesn't overlap the arrival date of the new one
