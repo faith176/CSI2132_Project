@@ -61,7 +61,7 @@ public class Employee {
     public String getSin() throws SQLException {
         //initialize variable that will hold the statement to be executed
 		st = db.createStatement(); 
-        partialQuery = ("SELECT sin FROM customer WHERE sin = " + sin);
+        partialQuery = ("SELECT sin FROM employee WHERE sin = " + sin);
         ResultSet rs = st.executeQuery(partialQuery);
         return rs.getString(1);
     }
@@ -69,7 +69,7 @@ public class Employee {
     public void setSin (BigInteger newSin) throws SQLException {
         //initialize variable that will hold the statement to be executed
 		st = db.createStatement(); 
-        partialQuery = ("UPDATE sin = " + newSin + " FROM customer WHERE sin = " + sin);
+        partialQuery = ("UPDATE sin = " + newSin + " FROM employee WHERE sin = " + sin);
         st.executeQuery(partialQuery);
     }
 
