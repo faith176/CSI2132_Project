@@ -9,11 +9,17 @@ import java.util.Scanner;
 
 public class Employee {
     private String sin;
+    private String first_name;
+    private String middle_name;
+    private String last_name;
+    private String address;
+    private String salary;
+    private String manager_sin;
     private String accountAlready;
     private String partialQuery;
 
-    private Connection db;
-    private Statement st; 
+    public Connection db;
+    public Statement st; 
 
     public Employee(String sin) {
         this.sin = sin;
@@ -31,6 +37,7 @@ public class Employee {
           ,"oades097", "University917");
           //initialize variable that will hold the statement to be executed
           this.st = db.createStatement();
+          
     } catch(SQLException ex) {
           System.err.println("Error get information from database");
           ex.printStackTrace();
@@ -42,7 +49,7 @@ public class Employee {
         System.out.println("\n" + "Do you already have an Account, Y or N. If you type N, you will be asked to make a new account" + "\n");
 		accountAlready = scanner.nextLine();
 
-		if (accountAlready.equals("Y")) {
+		if (accountAlready.toUpperCase().equals("Y")) {
             System.out.println("Enter Employee SIN to login: ");
             //sets the sin number as the one the user inputted, can retrieve data for this sin now
             this.sin = scanner.nextLine();
@@ -59,26 +66,44 @@ public class Employee {
     	//ResultSet rs = st.executeQuery("SELECT * FROM employee WHERE sin = " + sin + ";");
     	//System.out.println(rs);
     	
-    	st = db.createStatement(); 
+    	/*st = db.createStatement(); 
         partialQuery = ("SELECT * FROM employee WHERE sin = " + sin);
         ResultSet rs = st.executeQuery(partialQuery);
-        printResultSet(rs);
-    	
+        printResultSet(rs);*/
+        
+        // login unsuccessful
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Login unsuccessful. Would you like to return to the home page or try again?");
+        System.out.println("1: Return to home page");
+        System.out.println("2: Try again");
+        String next = scanner.nextLine();
+        String x = "0";
+        while (x.equals("0")) {
+        	switch(next) {
+				case ("1"):
+					// go back
+					x="good";
+					break;
+				case ("2"):
+					x="good";
+					EmployeeCase();
+					break;
+				default:
+					System.out.println("Please enter a valid number.");
+			}
+        }
+        
+        // login successful
+        
     	
     }
 
     //Will create a new employee
     public void createEmployeeAccount() throws SQLException {
-    	String first_name;
-    	String middle_name;
-    	String last_name;
-    	String address;
-    	String salary;
-    	String manager_sin;
     	Scanner scanner = new Scanner(System.in);
     	System.out.println("\n" + "--- employee account creation" + "\n\n");
         System.out.println("\n" + "Enter your SIN: " + "\n");
-		this.sin = scanner.nextLine();
+		sin = scanner.nextLine();
 		System.out.println("\n" + "Enter your first name: " + "\n");
 		first_name = scanner.nextLine();
 		System.out.println("\n" + "Enter your middle name: " + "\n");
@@ -95,11 +120,12 @@ public class Employee {
 		st = db.createStatement(); 
         partialQuery = ("INSERT INTO employee VALUES (" + sin + "," + first_name+ "," + middle_name + "," + last_name + "," + address + "," + salary + "," + manager_sin + ")");
         ResultSet rs = st.executeQuery(partialQuery);
+        System.out.println("\n\n" + "--- employee account created" + "\n\n");
     }
 
 
     public void createRentings() throws SQLException {
-
+    	
     }
 
     public void convertBookings() throws SQLException {
