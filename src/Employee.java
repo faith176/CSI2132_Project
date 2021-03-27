@@ -42,7 +42,7 @@ public class Employee {
         System.out.println("\n" + "Do you already have an Account, Y or N. If you type N, you will be asked to make a new account" + "\n");
 		accountAlready = scanner.nextLine();
 
-		if (accountAlready == "Y") {
+		if (accountAlready.equals("Y")) {
             System.out.println("Enter Employee SIN to login: ");
             //sets the sin number as the one the user inputted, can retrieve data for this sin now
             this.sin = scanner.nextLine();
@@ -55,12 +55,21 @@ public class Employee {
 
     //Will use SQL to get all the data from the database and add it to this class
     public void logIn() throws SQLException {
-
+    	Statement st = db.createStatement();
+    	//ResultSet rs = st.executeQuery("SELECT * FROM employee WHERE sin = " + sin + ";");
+    	//System.out.println(rs);
+    	
+    	//st = db.createStatement(); 
+        //partialQuery = ("SELECT * FROM employee WHERE sin = " + sin);
+        //ResultSet rs = st.executeQuery(partialQuery);
+        printResultSet(rs);
+    	
+    	
     }
 
     //Will create a new employee
     public void createEmployeeAccount() throws SQLException {
-
+    	System.out.println("SHSHS");
     }
 
 
