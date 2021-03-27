@@ -1,9 +1,4 @@
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Scanner;
 
 public class connection { 
@@ -13,7 +8,7 @@ public class connection {
 			System.out.println("\n" + "What Would You Like To Log In As? Type the number" + "\n");
 			System.out.println("1: Admin");
 	    	System.out.println("2: Employee");
-	    	System.out.println("3: Customer");
+	    	System.out.println("3: Customer" + "\n");
 			String personType = scanner.nextLine();
 
 			switch(personType) {
@@ -27,9 +22,11 @@ public class connection {
 					Employee employee = new Employee("");
 					employee.EmployeeCase();
 					break;
+				case ("3"):
+					personType = "Customer";
+					Customer customer = new Customer("");
+					customer.CustomerCase();
+					break;
 					}
-			}
 		}
-
-
-
+	}

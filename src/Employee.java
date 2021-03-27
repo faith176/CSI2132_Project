@@ -38,7 +38,7 @@ public class Employee {
     }
 
     public void EmployeeCase() throws SQLException {
-        Scanner scanner = new Scanner(System.in);  // Create a Scanner object
+        Scanner scanner = new Scanner(System.in);
         System.out.println("\n" + "Do you already have an Account, Y or N. If you type N, you will be asked to make a new account" + "\n");
 		accountAlready = scanner.nextLine();
 
@@ -62,6 +62,7 @@ public class Employee {
     public void createEmployeeAccount() throws SQLException {
 
     }
+
 
     public void createRentings() throws SQLException {
 

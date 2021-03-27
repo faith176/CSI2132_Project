@@ -32,7 +32,7 @@ public class Admin {
 
 		//initialize variable that will hold the statement to be executed
 		this.st = db.createStatement();
-		
+
 	  } catch(SQLException ex) {
 			System.err.println("Error get information from database");
 			ex.printStackTrace();
@@ -59,19 +59,19 @@ public class Admin {
 				AdminTask = "Delete";
 				break;
 		}
-	    	System.out.println("Task selected is: " + AdminTask + "\n");  // Output user input
+	    	System.out.println("Task selected is: " + AdminTask + "\n"); 
 	    		
-	    	System.out.println("Input column(s) to " + AdminTask + ": ");  // Output user input
+	    	System.out.println("Input column(s) to " + AdminTask + ": "); 
 	    	column = scanner.nextLine();
 	    		
-	    	System.out.println("Input table(s) to " + AdminTask + ": ");  // Output user input
+	    	System.out.println("Input table(s) to " + AdminTask + ": ");  
 	    	table = scanner.nextLine();
 	    		
-	    	System.out.println("Would you like a where condition, Type Y or N: ");  // Output user input
+	    	System.out.println("Would you like a where condition, Type Y or N: ");  
 	    	whereCondition = scanner.nextLine();
 	    		
 	    	if (whereCondition == "Y") {
-	    		System.out.println("Input where condition: ");  // Output user input
+	    		System.out.println("Input where condition: "); 
 	    		whereCondition = scanner.nextLine();
 	    	}
 	    	else {
