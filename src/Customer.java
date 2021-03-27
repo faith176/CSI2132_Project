@@ -53,6 +53,7 @@ public class Customer {
             System.out.println("Enter Customer SIN to login: ");
             //sets the sin number as the one the user inputted, can retrieve data for this sin now
             this.sin = scanner.nextLine();
+            getandPrintCustomerInfo();
         }
 	    else if (accountAlready.equals("N")) {
             System.out.println("Please Enter Your SIN number to log in:" + "\n");
@@ -94,9 +95,26 @@ public class Customer {
                     break;
                 case ("3"):
                     createBooking();
+                    printResultSet(currentBookings());
                     break;
             }
         }
+    }
+
+    public void getandPrintCustomerInfo() throws SQLException {
+        this.firstName = getFirstName();
+            this.middleName = getMiddleName();
+            this.lastName = getLastName();
+            this.address = getAddress();
+            this.date_of_registration = getDateOfRegistration();
+
+            System.out.println("\n" + "Customer Info Is: ");
+            System.out.println(firstName);
+            System.out.println(middleName);
+            System.out.println(lastName);
+            System.out.println(address);
+            System.out.println(date_of_registration);
+
     }
 
     //Will create a new customer account
@@ -120,7 +138,6 @@ public class Customer {
         partialQuery = ("SELECT * FROM booking WHERE sin = " + sin);
         ResultSet rs = st.executeQuery(partialQuery);
         return rs;
-        
     }
 
     public ResultSet currentRentings() throws SQLException {
@@ -133,7 +150,7 @@ public class Customer {
     public String getSin() throws SQLException {
         //initialize variable that will hold the statement to be executed
 		st = db.createStatement(); 
-        partialQuery = ("SELECT sin FROM employee WHERE sin = " + sin);
+        partialQuery = ("SELECT sin FROM customer WHERE sin = " + sin);
         ResultSet rs = st.executeQuery(partialQuery);
         return rs.getString(1);
     }
@@ -141,8 +158,76 @@ public class Customer {
     public void setSin (BigInteger newSin) throws SQLException {
         //initialize variable that will hold the statement to be executed
 		st = db.createStatement(); 
-        partialQuery = ("UPDATE sin = " + newSin + " FROM employee WHERE sin = " + sin);
+        partialQuery = ("UPDATE sin = " + newSin + " FROM customer WHERE sin = " + sin);
         st.executeQuery(partialQuery);
+    }
+
+
+    public String execute () throws SQLException {
+        //initialize variable that will hold the statement to be executed
+		st = db.createStatement(); 
+        partialQuery = ("SELECT first_name FROM customer WHERE sin = 123456789");
+        ResultSet rs = st.executeQuery(partialQuery);
+        while (rs.next()){
+        System.out.println(rs.getString("first_name"));
+        //System.out.println(rs.getString(1));
+        }
+        return "rs.getString(1);";
+    }
+
+    public String getFirstName () throws SQLException {
+        //initialize variable that will hold the statement to be executed
+		st = db.createStatement(); 
+        partialQuery = ("SELECT first_name FROM customer WHERE sin = " + sin);
+        ResultSet rs = st.executeQuery(partialQuery);
+        while (rs.next()){
+            firstName = rs.getString(1);
+            }
+        return firstName;
+    }
+
+    public String getMiddleName () throws SQLException {
+        //initialize variable that will hold the statement to be executed
+		st = db.createStatement(); 
+        partialQuery = ("SELECT middle_name FROM customer WHERE sin = " + sin);
+        ResultSet rs = st.executeQuery(partialQuery);
+        while (rs.next()){
+            middleName = rs.getString(1);
+            }
+        return middleName;
+    }
+
+    public String getLastName () throws SQLException {
+        //initialize variable that will hold the statement to be executed
+		st = db.createStatement(); 
+        partialQuery = ("SELECT last_name FROM customer WHERE sin = " + sin);
+        ResultSet rs = st.executeQuery(partialQuery);
+        while (rs.next()){
+            lastName = rs.getString(1);
+            }
+        return lastName;
+    }
+
+    public String getAddress () throws SQLException {
+        //initialize variable that will hold the statement to be executed
+		st = db.createStatement(); 
+        partialQuery = ("SELECT address FROM customer WHERE sin = " + sin);
+        ResultSet rs = st.executeQuery(partialQuery);
+        while (rs.next()){
+            address = rs.getString(1);
+            }
+        return address;
+    }
+
+    public String getDateOfRegistration () throws SQLException {
+        //initialize variable that will hold the statement to be executed
+		st = db.createStatement(); 
+        partialQuery = ("SELECT date_of_registration FROM customer WHERE sin = " + sin);
+        ResultSet rs = st.executeQuery(partialQuery);
+        while (rs.next()){
+            date_of_registration = rs.getString(1);
+            }
+        return date_of_registration;
     }
 
     //function that prints the results of a select query in a readable manner
