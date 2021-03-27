@@ -132,10 +132,12 @@ public class Employee {
     				case ("1"):
     					todo = "Convert";
     					System.out.println("DO SOMETHING");
+    					convertBookings();
     					break;
     				case ("2"):
     					todo = "Rent";
     					System.out.println("DO SOMETHING");
+    					createRentings();
     					break;
     				case ("0"):
     					todo = "Exit";
@@ -189,6 +191,64 @@ public class Employee {
         partialQuery = ("SELECT * FROM employee WHERE sin = " + sin);
         ResultSet rs = st.executeQuery(partialQuery);
         printResultSet(rs);
+        String arrival_date = rs.getString(4); // dates
+        String departure_date = rs.getString(5);
+        String duration_of_stay = rs.getString(6);
+        String room_num = rs.getString(7);
+        String hotel_id = rs.getString(8);
+        sin = rs.getString(9);
+        String renting_id;
+        String balance = "something"; // numeric
+        boolean paid_for;
+        st = db.createStatement(); 
+        partialQuery = ("SELECT MAX(renting_id) FROM renting");
+        rs = st.executeQuery(partialQuery);
+        int ridi = Integer.parseInt(rs.getString(1)) + 1;
+        renting_id = Integer.toString(ridi);
+        // TODO balance?
+        //System.out.println("Enter customer's booking id: ");
+    	//booking_id = scanner.nextLine();
+    	System.out.println("Has the customer paid for the room yet? (Y or N): ");
+    	String pf = scanner.nextLine();
+    	if (pf.toUpperCase().equals("Y")) {
+    		paid_for = true;
+    	}
+    	else {
+    		paid_for = false;
+    	}   
+    	// query to add renting to schema
+    	st = db.createStatement(); 
+        partialQuery = ("INSERT INTO renting VALUES (" + renting_id + "," + balance + "," + paid_for + "," + arrival_date + 
+        		"," + departure_date + "," + duration_of_stay + "," + room_num + hotel_id + "," + sin + ")");
+        rs = st.executeQuery(partialQuery);
+        System.out.println("\n--- Room renting was successful...");
+        System.out.println("What would you like to do next? Type the corresponding number: ");
+        System.out.println("1: Convert a booking to a renting");
+        System.out.println("2: Renting without a booking");
+        System.out.println("0: Exit");
+        todo_entered = scanner.nextLine();
+        todo = "0";
+        while (todo.equals("0")) {
+        	switch(todo_entered) {
+				case ("1"):
+					todo = "Convert";
+					System.out.println("DO SOMETHING");
+					convertBookings();
+					break;
+				case ("2"):
+					todo = "Rent";
+					System.out.println("DO SOMETHING");
+					createRentings();
+					break;
+				case ("0"):
+					todo = "Exit";
+					System.out.println("--- Returning to main page...");
+					break;
+				default:
+					System.out.println("Please enter a valid number.");
+			}
+        }
+        
     	
     }
 
