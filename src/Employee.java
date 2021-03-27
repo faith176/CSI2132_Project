@@ -55,21 +55,46 @@ public class Employee {
 
     //Will use SQL to get all the data from the database and add it to this class
     public void logIn() throws SQLException {
-    	Statement st = db.createStatement();
+    	//Statement st = db.createStatement();
     	//ResultSet rs = st.executeQuery("SELECT * FROM employee WHERE sin = " + sin + ";");
     	//System.out.println(rs);
     	
     	//st = db.createStatement(); 
         //partialQuery = ("SELECT * FROM employee WHERE sin = " + sin);
         //ResultSet rs = st.executeQuery(partialQuery);
-        printResultSet(rs);
+        //printResultSet(rs);
     	
     	
     }
 
     //Will create a new employee
     public void createEmployeeAccount() throws SQLException {
-    	System.out.println("SHSHS");
+    	String first_name;
+    	String middle_name;
+    	String last_name;
+    	String address;
+    	String salary;
+    	String manager_sin;
+    	Scanner scanner = new Scanner(System.in);
+    	System.out.println("\n" + "--- employee account creation" + "\n\n");
+        System.out.println("\n" + "Enter your SIN: " + "\n");
+		this.sin = scanner.nextLine();
+		System.out.println("\n" + "Enter your first name: " + "\n");
+		first_name = scanner.nextLine();
+		System.out.println("\n" + "Enter your middle name: " + "\n");
+		middle_name = scanner.nextLine();
+		System.out.println("\n" + "Enter your last name: " + "\n");
+		last_name = scanner.nextLine();
+		System.out.println("\n" + "Enter your address: " + "\n");
+		address = scanner.nextLine();
+		System.out.println("\n" + "Enter your salary: " + "\n");
+		salary = scanner.nextLine();
+		System.out.println("\n" + "Enter your manager SIN: " + "\n");
+		manager_sin = scanner.nextLine();
+    	//System.out.println("SHSHS");
+		st = db.createStatement(); 
+        partialQuery = ("INSERT INTO employee VALUES (" + sin + "," + first_name+ "," + middle_name + "," + last_name + "," + address + "," + salary + "," + manager_sin + ")");
+        ResultSet rs = st.executeQuery(partialQuery);
     }
 
 
