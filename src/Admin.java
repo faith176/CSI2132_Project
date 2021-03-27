@@ -27,9 +27,12 @@ public class Admin {
 		//attempts to connect to the database, needs password and username
 	  try {
 		//DATABASE CONNECTION NOT WORKING NEED HELP 
-		this.db = DriverManager.getConnection();
-			//initialize variable that will hold the statement to be executed
-			this.st = db.createStatement();
+		this.db = DriverManager.getConnection("jdbc:postgresql://web0.site.uottawa.ca:15432/group_b03_g30"
+		,"oades097", "University917");
+
+		//initialize variable that will hold the statement to be executed
+		this.st = db.createStatement();
+		
 	  } catch(SQLException ex) {
 			System.err.println("Error get information from database");
 			ex.printStackTrace();
@@ -75,7 +78,6 @@ public class Admin {
 	    		whereCondition = "";
 	    	}
 
-
 		switch(AdminTask) {
 	    	case ("Select"):
 				printResultSet(select());
@@ -86,7 +88,9 @@ public class Admin {
 			case ("Delete"):
 				delete();
 				break;
-		}	   
+		}
+		//adds a space after last output
+		System.out.print("");	   
 	}
   
   public ResultSet select() throws SQLException {

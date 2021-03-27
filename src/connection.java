@@ -21,10 +21,12 @@ public class connection {
 					personType = "Admin";
 					Admin admin = new Admin();
 					admin.AdminCase();
+					break;
 				case ("2"):
 					personType = "Employee";
 					Employee employee = new Employee("");
 					employee.EmployeeCase();
+					break;
 					}
 			}
 		}

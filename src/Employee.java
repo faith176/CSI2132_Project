@@ -27,7 +27,8 @@ public class Employee {
       //attempts to connect to the database, needs password and username
     try {
           //DATABASE CONNECTION NOT WORKING NEED HELP 
-		this.db = DriverManager.getConnection();
+          this.db = DriverManager.getConnection("jdbc:postgresql://web0.site.uottawa.ca:15432/group_b03_g30"
+          ,"oades097", "University917");
           //initialize variable that will hold the statement to be executed
           this.st = db.createStatement();
     } catch(SQLException ex) {
@@ -42,22 +43,36 @@ public class Employee {
 		accountAlready = scanner.nextLine();
 
 		if (accountAlready == "Y") {
-		createEmployeeAccount();
+            System.out.println("Enter Employee SIN to login: ");
+            //sets the sin number as the one the user inputted, can retrieve data for this sin now
+            this.sin = scanner.nextLine();
+		    logIn();
         }
 	    else {
-			//function retrives all relavant information of the employee from the database
-			logIn();
+            createEmployeeAccount();
 		}
     }
 
+    //Will use SQL to get all the data from the database and add it to this class
     public void logIn() throws SQLException {
 
     }
 
-    public void createEmployeeAccount() {
+    //Will create a new employee
+    public void createEmployeeAccount() throws SQLException {
 
     }
 
+    public void createRentings() throws SQLException {
+
+    }
+
+    public void convertBookings() throws SQLException {
+
+    }
+
+
+    //Probably Won't use this
     public String getSin() throws SQLException {
         //initialize variable that will hold the statement to be executed
 		st = db.createStatement(); 
@@ -72,13 +87,6 @@ public class Employee {
         partialQuery = ("UPDATE sin = " + newSin + " FROM employee WHERE sin = " + sin);
         st.executeQuery(partialQuery);
     }
-
-
-
-
-
-
-
 
     //function that prints the results of a select query in a readable manner
 		final private static void printResultSet(ResultSet rs) throws SQLException {
@@ -101,11 +109,4 @@ public class Employee {
 		        System.out.println("");
 		    }
 		}
-
-
-
 }
-
-
-
-
