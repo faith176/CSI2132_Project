@@ -26,7 +26,6 @@ public class Admin {
 	}
 		//attempts to connect to the database, needs password and username
 	  try {
-
 		//DATABASE CONNECTION NOT WORKING NEED HELP 
 		this.db = DriverManager.getConnection();
 			//initialize variable that will hold the statement to be executed

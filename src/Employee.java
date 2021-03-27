@@ -26,8 +26,8 @@ public class Employee {
   }
       //attempts to connect to the database, needs password and username
     try {
-          this.db = DriverManager.getConnection("jdbc:postgresql://web0.site.uottawa.ca:15432/group_b03_g30"
-          ,"oades097", "University917");
+          //DATABASE CONNECTION NOT WORKING NEED HELP 
+		this.db = DriverManager.getConnection();
           //initialize variable that will hold the statement to be executed
           this.st = db.createStatement();
     } catch(SQLException ex) {
