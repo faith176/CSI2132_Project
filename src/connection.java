@@ -1,7 +1,7 @@
 import java.sql.SQLException;
 import java.util.Scanner;
 
-public class connection { 
+public class Connection { 
 		public static void main(String[] args) throws SQLException {
 
 			Scanner scanner = new Scanner(System.in);
