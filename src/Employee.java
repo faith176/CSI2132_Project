@@ -59,10 +59,10 @@ public class Employee {
     	//ResultSet rs = st.executeQuery("SELECT * FROM employee WHERE sin = " + sin + ";");
     	//System.out.println(rs);
     	
-    	//st = db.createStatement(); 
-        //partialQuery = ("SELECT * FROM employee WHERE sin = " + sin);
-        //ResultSet rs = st.executeQuery(partialQuery);
-        //printResultSet(rs);
+    	st = db.createStatement(); 
+        partialQuery = ("SELECT * FROM employee WHERE sin = " + sin);
+        ResultSet rs = st.executeQuery(partialQuery);
+        printResultSet(rs);
     	
     	
     }
