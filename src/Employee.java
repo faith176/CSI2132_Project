@@ -17,6 +17,8 @@ public class Employee {
     private String manager_sin;
     private String accountAlready;
     private String partialQuery;
+    private String todo;
+    private String todo_entered;
 
     public Connection db;
     public Statement st; 
@@ -45,61 +47,111 @@ public class Employee {
     }
 
     public void EmployeeCase() throws SQLException {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("\n" + "Do you already have an Account, Y or N. If you type N, you will be asked to make a new account" + "\n");
-		accountAlready = scanner.nextLine();
+    	todo = "what";
+    	while (todo.equals("what")) {
+    		Scanner scanner = new Scanner(System.in);
+            System.out.println("\n" + "Welcome Employee, what would you like to do? Type the corresponding number:");
+            System.out.println("1: Login");
+            System.out.println("2: Create employee account");
+            System.out.println("0: Exit");
+    		todo_entered = scanner.nextLine();
 
-		if (accountAlready.toUpperCase().equals("Y")) {
-            System.out.println("Enter Employee SIN to login: ");
-            //sets the sin number as the one the user inputted, can retrieve data for this sin now
-            this.sin = scanner.nextLine();
-		    logIn();
-        }
-	    else {
-            createEmployeeAccount();
-		}
+    		switch(todo_entered) {
+		    	case ("1"):
+		    		todo_entered = "Login";
+		    		System.out.println("Enter Employee SIN to login: ");
+		    		// TODO error if not 9 digits
+		    		//sets the sin number as the one the user inputted, can retrieve data for this sin now
+		    		this.sin = scanner.nextLine();
+		    		logIn();
+					break;
+				case ("2"):
+					todo_entered = "Create";
+					createEmployeeAccount();
+					break;
+				case ("0"):
+					todo_entered = "Exit";
+					System.out.println("--- Returning to main page...");
+					return;
+				default:
+					System.out.println("--- Please enter a valid number.");
+    		}
+				
+    	}
+        
     }
 
     //Will use SQL to get all the data from the database and add it to this class
     public void logIn() throws SQLException {
-    	//Statement st = db.createStatement();
-    	//ResultSet rs = st.executeQuery("SELECT * FROM employee WHERE sin = " + sin + ";");
-    	//System.out.println(rs);
-    	
-    	/*st = db.createStatement(); 
+    	// checks if the the sin entered is correct to an employee sin
+    	st = db.createStatement(); 
         partialQuery = ("SELECT * FROM employee WHERE sin = " + sin);
         ResultSet rs = st.executeQuery(partialQuery);
-        printResultSet(rs);*/
+        printResultSet(rs);
         
         // login unsuccessful
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Login unsuccessful. Would you like to return to the home page or try again?");
-        System.out.println("1: Return to home page");
-        System.out.println("2: Try again");
-        String next = scanner.nextLine();
-        String x = "0";
-        while (x.equals("0")) {
-        	switch(next) {
-				case ("1"):
-					// go back
-					x="good";
-					break;
-				case ("2"):
-					x="good";
-					EmployeeCase();
-					break;
-				default:
-					System.out.println("Please enter a valid number.");
-			}
+        // TODO make this work
+        if (rs.isBeforeFirst() && rs.isAfterLast()) {
+        	Scanner scanner = new Scanner(System.in);
+            System.out.println("Login unsuccessful. Would you like to return to the home page or try again?");
+            System.out.println("1: Return");
+            System.out.println("2: Try again");
+            todo_entered = scanner.nextLine();
+            todo = "0";
+            while (todo.equals("0")) {
+            	switch(todo_entered) {
+    				case ("1"):
+    					// go back
+    					todo = "good";
+    					System.out.println("--- Returning to main page...");
+    					break;
+    				case ("2"):
+    					todo = "good";
+    					EmployeeCase();
+    					break;
+    				default:
+    					System.out.println("Please enter a valid number.");
+    			}
+            }
         }
         
         // login successful
-        
-    	
+        // 102938162
+        else {
+        	System.out.println("--- Login successful...");
+        	
+        	Scanner scanner = new Scanner(System.in);
+            System.out.println("What would you like to do? Type the corresponding number: ");
+            System.out.println("1: Convert a booking to a renting");
+            System.out.println("2: Renting without a booking");
+            System.out.println("0: Exit");
+            todo_entered = scanner.nextLine();
+            todo = "0";
+            while (todo.equals("0")) {
+            	switch(todo_entered) {
+    				case ("1"):
+    					todo = "Convert";
+    					System.out.println("DO SOMETHING");
+    					break;
+    				case ("2"):
+    					todo = "Rent";
+    					System.out.println("DO SOMETHING");
+    					break;
+    				case ("0"):
+    					todo = "Exit";
+    					System.out.println("--- Returning to main page...");
+    					break;
+    				default:
+    					System.out.println("Please enter a valid number.");
+    			}
+            }
+            
+        }
     }
 
     //Will create a new employee
     public void createEmployeeAccount() throws SQLException {
+    	boolean flag = false;
     	Scanner scanner = new Scanner(System.in);
     	System.out.println("\n" + "--- employee account creation" + "\n\n");
         System.out.println("\n" + "Enter your SIN: " + "\n");
@@ -118,7 +170,7 @@ public class Employee {
 		manager_sin = scanner.nextLine();
     	//System.out.println("SHSHS");
 		st = db.createStatement(); 
-        partialQuery = ("INSERT INTO employee VALUES (" + sin + "," + first_name+ "," + middle_name + "," + last_name + "," + address + "," + salary + "," + manager_sin + ")");
+        partialQuery = ("INSERT INTO employee VALUES (" + sin + "," + first_name + "," + middle_name + "," + last_name + "," + address + "," + salary + "," + manager_sin + ")");
         ResultSet rs = st.executeQuery(partialQuery);
         System.out.println("\n\n" + "--- employee account created" + "\n\n");
     }
@@ -129,7 +181,15 @@ public class Employee {
     }
 
     public void convertBookings() throws SQLException {
-
+    	String booking_id;
+    	Scanner scanner = new Scanner(System.in);
+    	System.out.println("Enter customer's booking id: ");
+    	booking_id = scanner.nextLine();
+    	st = db.createStatement(); 
+        partialQuery = ("SELECT * FROM employee WHERE sin = " + sin);
+        ResultSet rs = st.executeQuery(partialQuery);
+        printResultSet(rs);
+    	
     }
 
 
