@@ -9,8 +9,16 @@ import java.util.Scanner;
 
 public class Customer {
     private String sin;
+    private String firstName;
+    private String middleName;
+    private String lastName;
+    private String address;
+    private String date_of_registration;
+
     private String accountAlready;
     private String partialQuery;
+
+    
 
     private Connection db;
     private Statement st; 
@@ -46,34 +54,50 @@ public class Customer {
             System.out.println("Enter Customer SIN to login: ");
             //sets the sin number as the one the user inputted, can retrieve data for this sin now
             this.sin = scanner.nextLine();
-		    logIn();
         }
 	    else {
+            System.out.println("Please Enter Your SIN number to log in:" + "\n");
+            this.sin = scanner.nextLine();
+            System.out.println("Please Enter Your first name:" + "\n");
+            this.firstName = scanner.nextLine();
+            System.out.println("Please Enter Your middle name:" + "\n");
+            this.middleName = scanner.nextLine();
+            System.out.println("Please Enter Your last name:" + "\n");
+            this.lastName = scanner.nextLine();
+            System.out.println("Please Enter Your address:" + "\n");
+            this.sin = scanner.nextLine();
+        
+            //sets the value of to current time
+            this.date_of_registration = String.valueOf(java.time.LocalDate.now());
             createCustomerAccount();
 		}
     }
 
-    //Will use SQL to get all the data from the database and add it to this class
-    public void logIn() throws SQLException {
-
-    }
-
-    //Will create a new employee
+    //Will create a new customer account
     public void createCustomerAccount() throws SQLException {
-
+        st = db.createStatement(); 
+        partialQuery = ("INSERT INTO CUSTOMER VALUES (" + sin + ", " + firstName + ", " + middleName + ", " + lastName + ", " + address+ ", " + date_of_registration +")" );
+        st.executeQuery(partialQuery);
     }
 
     public void createBooking() {
+
 
     }
 
 
     public void currentBookings() throws SQLException {
-
+        st = db.createStatement(); 
+        partialQuery = ("SELECT * FROM bookings WHERE sin = " + sin);
+        ResultSet rs = st.executeQuery(partialQuery);
+        printResultSet(rs);
     }
 
     public void currentRentings() throws SQLException {
-
+        st = db.createStatement(); 
+        partialQuery = ("SELECT * FROM renting WHERE sin = " + sin);
+        ResultSet rs = st.executeQuery(partialQuery);
+        printResultSet(rs);
     }
 
     public String getSin() throws SQLException {

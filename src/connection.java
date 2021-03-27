@@ -1,7 +1,7 @@
 import java.sql.SQLException;
 import java.util.Scanner;
 
-public class Connection { 
+public class connection {
 		public static void main(String[] args) throws SQLException {
 
 			String personType = "no one";
