@@ -5,7 +5,10 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Scanner; 
+import java.util.Scanner;
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.temporal.ChronoUnit;
 
 public class Customer {
     protected String sin;
@@ -22,7 +25,8 @@ public class Customer {
     private String hotel_id;
     private String parent_brand;
     private String room_num;
-    private String anythingAvailiable;
+    private Boolean foundRoom;
+    private Boolean quit;
 
 
     private String accountAlready;
@@ -139,6 +143,9 @@ public class Customer {
     public boolean createBooking() throws SQLException {
         Scanner scanner2 = new Scanner(System.in);
         ResultSet rs;
+        foundRoom = false;
+        quit= false;
+        while (foundRoom == false && quit == false) {
         System.out.println("Let's create a booking, we will now check for your preferences" + "\n");
 
         //gets the users specified brand
@@ -173,28 +180,39 @@ public class Customer {
         partialQuery = ("SELECT room_num, extension_capabilities, other_amenities FROM parent_brand,hotel,room WHERE parent_brand.pbname = hotel.pbname AND hotel.hotel_id = room.hotel_id AND parent_brand.pbname = '"  + parent_brand + "' AND hotel.hotel_id = '" + hotel_id + "' AND room.view_type = '" + view_type+ "' AND room.capacity >= " + occupants);
         rs = st.executeQuery(partialQuery);
         printResultSet(rs);
-        // while (rs.next()){
-        //     anythingAvailiable = rs.getString(1);
-        //     }
-        // if (anythingAvailiable.equals("")) {
-        //     System.out.println("No rooms match your preferences, press 0 to start again");
-        // }
-        // else if (!anythingAvailiable.equals("")) {
-        //     room_num = scanner2.nextLine();
-        // }
-        room_num = scanner2.nextLine();
+        if (!rs.next()) {
+            room_num = scanner2.nextLine();
 
-        System.out.println("What Arrival Date, use YYYY-MM-DD format");
-        arrival_date = scanner2.nextLine();
+            System.out.println("What Arrival Date, use YYYY-MM-DD format");
+            arrival_date = scanner2.nextLine();
 
-        System.out.println("What Departure Date, use YYYY-MM-DD format");
-        departure_date = scanner2.nextLine();
+            System.out.println("What Departure Date, use YYYY-MM-DD format");
+            departure_date = scanner2.nextLine();
 
-        System.out.println("Checking room avliability");
+            System.out.println("Checking room avaliability");
+            Room potencialRoom = new Room(departure_date, arrival_date, room_num, hotel_id);
+            if (potencialRoom.roomFree(departure_date, arrival_date, room_num, hotel_id) == false) {
+                System.out.println("Room not avaliable please start again");
+                foundRoom = false;
+            }
+            else if (potencialRoom.roomFree(departure_date, arrival_date, room_num, hotel_id) == false) {
+                foundRoom = true;
+                st = db.createStatement(); 
+                partialQuery = ("INSERT INTO booking VALUES (" + view_type+ ", " + occupants + ", " + arrival_date + ", " + departure_date + ", " + 0 + room_num + ", " + hotel_id + ", " + sin + ")");
+                st.executeQuery(partialQuery);
+            }
 
-        Room potencialRoom = new Room(departure_date, arrival_date, room_num, hotel_id);
-        System.out.println(potencialRoom.roomFree(departure_date, arrival_date, room_num, hotel_id));
-
+        }
+        else if (rs.isBeforeFirst()) {
+            System.out.println("No rooms are good enough for your preferences, try being less picky this time");
+            System.out.println("Would you like to try again, type Y or N");
+            if (scanner2.nextLine().equals("N")) {
+                quit = true;
+            }
+            foundRoom = false;
+        }
+        
+        }
         scanner2.close();
         return true;
     }
@@ -211,6 +229,13 @@ public class Customer {
         partialQuery = ("SELECT * FROM renting WHERE sin = " + sin);
         ResultSet rs = st.executeQuery(partialQuery);
         return rs;
+    }
+
+    public String betweenDates(String date1, String date2) throws SQLException {
+        date1 = date1.replace("-", " ");
+        date1 = date1.replace("-", " ");
+        
+        return String.valueOf(betweenDates(arrival_date, departure_date));
     }
 
     public String getSin() throws SQLException {
