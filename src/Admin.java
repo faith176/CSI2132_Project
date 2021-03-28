@@ -87,6 +87,8 @@ public class Admin {
 	    	else {
 	    		whereCondition = "";
 	    	}
+	    	
+	    	System.out.println("Here are your results: \n");
 
 			switch(AdminTask) {
 				case ("Select"):
