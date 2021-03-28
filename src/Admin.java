@@ -42,9 +42,9 @@ public class Admin {
   public void AdminCase() throws SQLException {
 	  
 	  Scanner scanner = new Scanner(System.in);  // Create a Scanner object
+	  System.out.println("\n" + "Welcome Admin! What would you like to do? Type the corresponding number:" + "\n");
 
 	  while (AdminTask != "0") {
-	    System.out.println("\n" + "Welcome Admin! What would you like to do? Type the corresponding number:" + "\n");
 	    System.out.println("1: Select");
 	    System.out.println("2: Insert");
 	    System.out.println("3: Select");
@@ -89,24 +89,28 @@ public class Admin {
 	    	}
 	    	
 	    	System.out.println("Here are your results: \n");
-
-			switch(AdminTask) {
-				case ("Select"):
-					printResultSet(select());
-					break;
-				case ("Insert"):
-					insert();
-					break;
-				case ("Delete"):
-					delete();
-					break;
-				default:
-					System.out.println("--- None of the cases Select/Insert/Delete were selected.");
-					break;
-			}
-			//adds a space after last output
-			System.out.print("");	
-		
+	    	try {
+				switch(AdminTask) {
+					case ("Select"):
+						printResultSet(select());
+						break;
+					case ("Insert"):
+						insert();
+						break;
+					case ("Delete"):
+						delete();
+						break;
+					default:
+						System.out.println("--- None of the cases Select/Insert/Delete were selected.");
+						break;
+				}
+				//adds a space after last output
+				System.out.print("");	
+	    	} catch (SQLException e) {
+	    		System.out.println("--- An SQL Exception occured. Check that you spelled everything correctly.");
+	    	}
+	    	
+	    	System.out.println("\n\nWould you like to do anything else? Type the corresponding number:" + "\n");
 		}
 	}
   
