@@ -29,13 +29,7 @@ public class connection {
 					case ("3"):
 						personType = "Customer";
 						Customer customer = new Customer("");
-<<<<<<< HEAD
-						// customer.CustomerCase();
-						customer.sin = "123456789";
-						customer.loggedInTask();
-=======
 						customer.CustomerCase();
->>>>>>> d77a772fe68949d2992735961434191aa1431347
 						break;
 					case ("0"):
 						System.out.println("Thank you for using our service. Goodbye!");
