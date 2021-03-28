@@ -4,7 +4,7 @@ import java.util.Scanner;
 public class connection {
 		public static void main(String[] args) throws SQLException {
 
-			String personType = "no one";
+			String personType = "1";
 
 			while (personType != "0"){ 
 				Scanner scanner = new Scanner(System.in);
@@ -31,7 +31,7 @@ public class connection {
 						Customer customer = new Customer("");
 						// customer.CustomerCase();
 						customer.sin = "123456789";
-						customer.createBooking();
+						customer.loggedInTask();
 						break;
 					case ("0"):
 						System.out.println("Thank you for using our service. Goodbye!");

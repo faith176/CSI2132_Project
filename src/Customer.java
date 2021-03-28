@@ -1,5 +1,6 @@
 import java.math.BigInteger;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -8,6 +9,10 @@ import java.sql.Statement;
 import java.util.Scanner;
 import java.time.LocalDate;
 import java.time.Month;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.Temporal;
+import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
 public class Customer {
@@ -28,13 +33,17 @@ public class Customer {
     private Boolean foundRoom;
     private Boolean quit;
 
+    private String partialQuery2;
+    private String partialQuery3;
 
     private String accountAlready;
     private String partialQuery;
-    private String customerTask;
+    //default
+    private String customerTask = "23";
 
     private Connection db;
     private Statement st;
+    private Statement yu;
 
     public Customer(String sin) {
         this.sin = sin;
@@ -52,6 +61,7 @@ public class Customer {
           ,"elu032", "Qw300114727oP!");
           //initialize variable that will hold the statement to be executed
           this.st = db.createStatement();
+          this.yu = db.createStatement();
     } catch(SQLException ex) {
           System.err.println("Error get information from database");
           ex.printStackTrace();
@@ -67,7 +77,6 @@ public class Customer {
             System.out.println("Enter Customer SIN to login: ");
             //sets the sin number as the one the user inputted, can retrieve data for this sin now
             this.sin = scanner.nextLine();
-            getandPrintCustomerInfo();
         }
 	    else if (accountAlready.equals("N")) {
             System.out.println("Please Enter Your SIN number to log in:" + "\n");
@@ -94,7 +103,6 @@ public class Customer {
     public void loggedInTask() throws SQLException {
         Scanner scanner = new Scanner(System.in);
         //default value
-        customerTask = "1";
         while (!customerTask.equals("0")) {
             System.out.println("\n" + "What would you like to do?");
             System.out.println("0: To go back");
@@ -116,6 +124,7 @@ public class Customer {
                     break;
             }
         }
+        scanner.close();
     }
 
     public void getandPrintCustomerInfo() throws SQLException {
@@ -157,7 +166,7 @@ public class Customer {
         parent_brand = scanner2.nextLine();
 
         //gives the user the avaliable locations of hotels from their specified brand
-        System.out.println("Which location do you prefer of the availiable choices. Please input the hotel_id of your choice" + "\n");
+        System.out.println("\n"+"Which location do you prefer of the availiable choices. Please input the hotel_id of your choice" + "\n");
         st = db.createStatement(); 
         partialQuery = ("SELECT hotel_id, physical_address FROM parent_brand,hotel WHERE parent_brand.pbname = hotel.pbname AND parent_brand.pbname = '" + parent_brand + "'");
         rs = st.executeQuery(partialQuery);
@@ -165,22 +174,21 @@ public class Customer {
         hotel_id = scanner2.nextLine();
 
         //gets the view the user wants
-        System.out.println("These are the avaliable views in your hotel, input you choice");
-        partialQuery = ("SELECT room_num, view_type FROM parent_brand,hotel,room WHERE parent_brand.pbname = hotel.pbname AND hotel.hotel_id = room.hotel_id AND parent_brand.pbname = '"  + parent_brand + "' AND hotel.hotel_id = '" + hotel_id + "'");
+        System.out.println("\n"+"These are the avaliable views in your hotel, input you choice");
+        partialQuery = ("SELECT DISTINCT view_type FROM parent_brand,hotel,room WHERE parent_brand.pbname = hotel.pbname AND hotel.hotel_id = room.hotel_id AND parent_brand.pbname = '"  + parent_brand + "' AND hotel.hotel_id = '" + hotel_id + "'");
         rs = st.executeQuery(partialQuery);
         printResultSet(rs);
         view_type = scanner2.nextLine();
 
         //gets the amount of occupants
-        System.out.println("How many occupants?");
+        System.out.println("\n" +"How many occupants?");
         occupants = scanner2.nextLine();
 
-        
-        System.out.println("These are the possible rooms that fit your preferences please pick one. Input the room number" + "\n");
+        System.out.println("\n"+"These are the possible rooms that fit your preferences please pick one. Input the room number" + "\n");
         partialQuery = ("SELECT room_num, extension_capabilities, other_amenities FROM parent_brand,hotel,room WHERE parent_brand.pbname = hotel.pbname AND hotel.hotel_id = room.hotel_id AND parent_brand.pbname = '"  + parent_brand + "' AND hotel.hotel_id = '" + hotel_id + "' AND room.view_type = '" + view_type+ "' AND room.capacity >= " + occupants);
         rs = st.executeQuery(partialQuery);
-        printResultSet(rs);
-        if (!rs.next()) {
+        if (rs.isBeforeFirst() == true) {
+            printResultSet(rs);
             room_num = scanner2.nextLine();
 
             System.out.println("What Arrival Date, use YYYY-MM-DD format");
@@ -190,21 +198,23 @@ public class Customer {
             departure_date = scanner2.nextLine();
 
             System.out.println("Checking room avaliability");
-            Room potencialRoom = new Room(departure_date, arrival_date, room_num, hotel_id);
-            if (potencialRoom.roomFree(departure_date, arrival_date, room_num, hotel_id) == false) {
-                System.out.println("Room not avaliable please start again");
-                foundRoom = false;
-            }
-            else if (potencialRoom.roomFree(departure_date, arrival_date, room_num, hotel_id) == false) {
+            if (overlapsWithExisting() == false) {
                 foundRoom = true;
-                st = db.createStatement(); 
-                partialQuery = ("INSERT INTO booking VALUES (" + view_type+ ", " + occupants + ", " + arrival_date + ", " + departure_date + ", " + 0 + room_num + ", " + hotel_id + ", " + sin + ")");
-                st.executeQuery(partialQuery);
+                st = db.createStatement();
+                partialQuery = ("INSERT INTO booking VALUES (" + "(SELECT (COUNT(booking.booking_id) + 1) FROM booking)" + ", '" + view_type+ "', " + occupants + ", '" + arrival_date + "', '" + departure_date + "', " + betweenDates(arrival_date, departure_date) + ", " + room_num + ", " + hotel_id + ", " + sin + ")");
+                st.executeUpdate(partialQuery);
             }
-
+            else {
+                System.out.println("\n"+ "Room not avaliable please start again");
+                System.out.println("Would you like to try again, type Y or N" + "\n");
+                foundRoom = false;
+                if (scanner2.nextLine().equals("N")) {
+                    quit = true;
+                }
+            }
         }
-        else if (rs.isBeforeFirst()) {
-            System.out.println("No rooms are good enough for your preferences, try being less picky this time");
+        else {
+            System.out.println("\n" + "No rooms are good enough for your preferences, try being less picky this time");
             System.out.println("Would you like to try again, type Y or N");
             if (scanner2.nextLine().equals("N")) {
                 quit = true;
@@ -216,6 +226,8 @@ public class Customer {
         scanner2.close();
         return true;
     }
+
+
 
     public ResultSet currentBookings() throws SQLException {
         st = db.createStatement(); 
@@ -231,12 +243,49 @@ public class Customer {
         return rs;
     }
 
-    public String betweenDates(String date1, String date2) throws SQLException {
-        date1 = date1.replace("-", " ");
-        date1 = date1.replace("-", " ");
-        
-        return String.valueOf(betweenDates(arrival_date, departure_date));
+    public String betweenDates(String date1, String date2) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate localDate1 = LocalDate.parse(date1, formatter);
+        LocalDate localDate2 = LocalDate.parse(date2, formatter);
+        //System.out.println(String.valueOf(ChronoUnit.DAYS.between(localDate1, localDate2)));
+        return (String.valueOf(ChronoUnit.DAYS.between(localDate1, localDate2)));
     }
+
+    public boolean overlapsWithExisting() throws SQLException {
+        st = db.createStatement(); 
+        yu = db.createStatement();
+        partialQuery2 = ("SELECT arrival_date FROM booking WHERE booking.room_num = '"+ room_num+"' AND booking.hotel_id = '" + hotel_id+"'");
+        partialQuery3 = ("SELECT departure_date FROM booking WHERE booking.room_num = '"+ room_num+"' AND booking.hotel_id = '" + hotel_id+"'");
+        ResultSet rs = st.executeQuery(partialQuery2);
+        ResultSet rd = yu.executeQuery(partialQuery3);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate arrival = LocalDate.parse(arrival_date, formatter);
+        LocalDate departure = LocalDate.parse(departure_date, formatter);
+
+        LocalDate arrivalTemp = LocalDate.parse(arrival_date, formatter);
+        LocalDate departureTemp = LocalDate.parse(departure_date, formatter);
+        
+        while (rd.next()) {
+            departureTemp = LocalDate.parse(rd.getString(1), formatter);
+            if(!(arrival.isAfter(departureTemp))) {
+                return true;
+            }
+        }
+        while (rs.next()){
+            arrivalTemp = LocalDate.parse(rs.getString(1), formatter);
+            if((departure.isBefore(arrivalTemp))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+
+
+    //
+    //Getters and Setters
+    //
 
     public String getSin() throws SQLException {
         //initialize variable that will hold the statement to be executed
