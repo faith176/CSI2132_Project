@@ -8,7 +8,7 @@ public class connection {
 
 			while (personType != "0"){ 
 				Scanner scanner = new Scanner(System.in);
-				System.out.println("\n" + "What Would You Like To Log In As? Type the number" + "\n");
+				System.out.println("\n" + "What Would You Like To Log In As? Type the number:" + "\n");
 				System.out.println("1: Admin");
 				System.out.println("2: Employee");
 				System.out.println("3: Customer");
@@ -29,16 +29,20 @@ public class connection {
 					case ("3"):
 						personType = "Customer";
 						Customer customer = new Customer("");
+<<<<<<< HEAD
 						// customer.CustomerCase();
 						customer.sin = "123456789";
 						customer.loggedInTask();
+=======
+						customer.CustomerCase();
+>>>>>>> d77a772fe68949d2992735961434191aa1431347
 						break;
 					case ("0"):
 						System.out.println("Thank you for using our service. Goodbye!");
 						System.exit(0);
 						break;
 					default:
-						System.out.println("Please enter a valid number.");
+						System.out.println("--- Please enter a valid number.");
 					}
 
 			}

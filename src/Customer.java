@@ -70,7 +70,7 @@ public class Customer {
 
     public void CustomerCase() throws SQLException {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("\n" + "Do you already have an Account, Y or N. If you type N, you will be asked to make a new account" + "\n");
+        System.out.println("\n" + "Do you already have an Account, Y or N. If you type N, you will be asked to make a new account:" + "\n");
 		accountAlready = scanner.nextLine();
 
 		if (accountAlready.equals("Y")) {
@@ -105,10 +105,10 @@ public class Customer {
         //default value
         while (!customerTask.equals("0")) {
             System.out.println("\n" + "What would you like to do?");
-            System.out.println("0: To go back");
             System.out.println("1: View current Bookings");
             System.out.println("2: View current Rentings");
-            System.out.println("3: Create A New Booking" + "\n");
+            System.out.println("3: Create A New Booking");
+            System.out.println("0: Exit\n");
     
             customerTask = scanner.nextLine();
             switch(customerTask) {
@@ -122,6 +122,8 @@ public class Customer {
                     createBooking();
                     printResultSet(currentBookings());
                     break;
+                default:
+                	System.out.println("--- Please enter a valid number");
             }
         }
         scanner.close();
