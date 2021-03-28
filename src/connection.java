@@ -8,7 +8,7 @@ public class connection {
 
 			while (personType != "0"){ 
 				Scanner scanner = new Scanner(System.in);
-				System.out.println("\n" + "What Would You Like To Log In As? Type the number:" + "\n");
+				System.out.println("\n\n" + "What Would You Like To Log In As? Type the number:" + "\n");
 				System.out.println("1: Admin");
 				System.out.println("2: Employee");
 				System.out.println("3: Customer");
