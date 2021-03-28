@@ -95,7 +95,7 @@ public class Customer {
 		}
 
         getandPrintCustomerInfo();
-        System.out.println("\n" + "You are now logged in");
+        System.out.println("\n" + "--- You are now logged in.");
         loggedInTask();
         scanner.close();
     }
@@ -122,8 +122,11 @@ public class Customer {
                     createBooking();
                     printResultSet(currentBookings());
                     break;
+                case ("0"):
+                	System.out.println("--- Logging out of customer...");
+                	return;
                 default:
-                	System.out.println("--- Please enter a valid number");
+                	System.out.println("--- Please enter a valid number.");
             }
         }
         scanner.close();
