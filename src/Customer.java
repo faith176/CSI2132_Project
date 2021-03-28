@@ -124,7 +124,6 @@ public class Customer {
                     break;
                 case ("0"):
                 	System.out.println("--- Logging out of customer...");
-                	return;
                 default:
                 	System.out.println("--- Please enter a valid number.");
             }
