@@ -193,7 +193,7 @@ public class Customer {
         occupants = scanner2.nextLine();
 
         System.out.println("\n"+"These are the possible rooms that fit your preferences please pick one. Input the room number" + "\n");
-        partialQuery = ("SELECT room_num, extension_capabilities, other_amenities FROM parent_brand,hotel,room WHERE parent_brand.pbname = hotel.pbname AND hotel.hotel_id = room.hotel_id AND parent_brand.pbname = '"  + parent_brand + "' AND hotel.hotel_id = '" + hotel_id + "' AND room.view_type = '" + view_type+ "' AND room.capacity >= " + occupants);
+        partialQuery = ("SELECT room_num, price, extension_capabilities, other_amenities FROM parent_brand,hotel,room WHERE parent_brand.pbname = hotel.pbname AND hotel.hotel_id = room.hotel_id AND parent_brand.pbname = '"  + parent_brand + "' AND hotel.hotel_id = '" + hotel_id + "' AND room.view_type = '" + view_type+ "' AND room.capacity >= " + occupants);
         rs = st.executeQuery(partialQuery);
         if (rs.isBeforeFirst() == true) {
             printResultSet(rs);
