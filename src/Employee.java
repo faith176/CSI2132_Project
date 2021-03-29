@@ -204,7 +204,7 @@ public class Employee {
     	System.out.println("Enter customer's booking id: ");
     	booking_id = scanner.nextLine();
     	st = db.createStatement(); 
-        partialQuery = ("SELECT * FROM employee WHERE sin = " + sin);
+        partialQuery = ("SELECT * FROM booking WHERE booking_id = " + booking_id);
         ResultSet rs = st.executeQuery(partialQuery);
         printResultSet(rs);
         String arrival_date = rs.getString(4); // dates
@@ -214,7 +214,7 @@ public class Employee {
         String hotel_id = rs.getString(8);
         sin = rs.getString(9);
         String renting_id;
-        String balance = "something"; // numeric
+        String balance = "1234.00"; // numeric
         boolean paid_for;
         st = db.createStatement(); 
         partialQuery = ("SELECT MAX(renting_id) FROM renting");
