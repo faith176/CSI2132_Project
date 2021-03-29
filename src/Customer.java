@@ -180,7 +180,7 @@ public class Customer {
         view_type = scanner2.nextLine();
 
         //gets the amount of occupants
-        System.out.println("\n" +"How many occupants? These are the ones avaliable at the hotel");
+        System.out.println("\n" +"How many occupants? These are the maximum capacities avaliable in the rooms in the hotel");
         partialQuery = ("SELECT DISTINCT capacity FROM parent_brand,hotel,room WHERE parent_brand.pbname = hotel.pbname AND hotel.hotel_id = room.hotel_id AND parent_brand.pbname = '"  + parent_brand + "' AND hotel.hotel_id = '" + hotel_id + "' AND room.view_type = '" + view_type + "'");
         rs = st.executeQuery(partialQuery);
         printResultSet(rs);
