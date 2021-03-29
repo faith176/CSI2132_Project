@@ -19,6 +19,7 @@ public class Customer {
     protected String date_of_registration;
 
     private String view_type;
+    private String price;
     private String occupants;
     private String arrival_date;
     private String departure_date;
@@ -94,14 +95,13 @@ public class Customer {
     }
 
     public void loggedInTask() throws SQLException {
-        
-        //default value
         while (!customerTask.equals("0")) {
             Scanner scanner = new Scanner(System.in);
             System.out.println("\n" + "What would you like to do?");
             System.out.println("1: View current Bookings");
             System.out.println("2: View current Rentings");
             System.out.println("3: Create A New Booking");
+            System.out.println("4: Request For A New Renting");
             System.out.println("0: Exit\n");
     
             customerTask = scanner.nextLine();
@@ -116,11 +116,16 @@ public class Customer {
                     createBooking();
                     printResultSet(currentBookings());
                     break;
+                case ("4"):
+                    requestForRenting();
+                    printResultSet(currentRentings());
+                    break;
                 case ("0"):
-                	System.out.println("--- Logging out of customer...");
+                	System.out.println("\n" +"--- Logging out of customer...");
                 	return;
                 default:
-                	System.out.println("--- Please enter a valid number.");
+                	System.out.println("\n" + "--- Please enter a valid number.");
+                    break;
             }
         }
         
@@ -148,6 +153,7 @@ public class Customer {
         st.executeUpdate(partialQuery);
     }
 
+    //FOR BOOKING
     public void createBooking() throws SQLException {
         Scanner scanner2 = new Scanner(System.in);
         ResultSet rs;
@@ -201,6 +207,7 @@ public class Customer {
 
             System.out.println("Checking room avaliability");
             if (overlapsWithExisting() == false) {
+                System.out.println("The room is avaliable, creating your booking now");
                 foundRoom = true;
                 st = db.createStatement();
                 partialQuery = ("INSERT INTO booking VALUES (" + "(SELECT (COUNT(booking.booking_id) + 1) FROM booking)" + ", '" + view_type+ "', " + occupants + ", '" + arrival_date + "', '" + departure_date + "', " + betweenDates(arrival_date, departure_date) + ", " + room_num + ", " + hotel_id + ", " + sin + ")");
@@ -227,6 +234,95 @@ public class Customer {
         }
     }
 
+
+    // FOR RENTING
+    public void requestForRenting() throws SQLException {
+        Scanner scanner3 = new Scanner(System.in);
+        ResultSet rs;
+        foundRoom = false;
+        quit= false;
+        while (foundRoom == false && quit == false) {
+        System.out.println("Let's create a renting, we will now check for your preferences" + "\n");
+
+        //gets the users specified brand
+        System.out.println("Which brand would you like to stay with" + "\n");
+        st = db.createStatement(); 
+        partialQuery = ("SELECT pbname FROM parent_brand");
+        rs = st.executeQuery(partialQuery);
+        printResultSet(rs);
+        parent_brand = scanner3.nextLine();
+
+        //gives the user the avaliable locations of hotels from their specified brand
+        System.out.println("\n"+"Which location are you currently requesting the renting from? Please input the hotel_id of your choice" + "\n");
+        st = db.createStatement(); 
+        partialQuery = ("SELECT hotel_id, physical_address FROM parent_brand,hotel WHERE parent_brand.pbname = hotel.pbname AND parent_brand.pbname = '" + parent_brand + "'");
+        rs = st.executeQuery(partialQuery);
+        printResultSet(rs);
+        hotel_id = scanner3.nextLine();
+
+        //gets the view the user wants
+        System.out.println("\n"+"These are the avaliable views in your hotel, input you choice");
+        partialQuery = ("SELECT DISTINCT view_type FROM parent_brand,hotel,room WHERE parent_brand.pbname = hotel.pbname AND hotel.hotel_id = room.hotel_id AND parent_brand.pbname = '"  + parent_brand + "' AND hotel.hotel_id = '" + hotel_id + "'");
+        rs = st.executeQuery(partialQuery);
+        printResultSet(rs);
+        view_type = scanner3.nextLine();
+
+        //gets the amount of occupants
+        System.out.println("\n" +"How many occupants? These are the maximum capacities avaliable in the rooms");
+        partialQuery = ("SELECT DISTINCT capacity FROM parent_brand,hotel,room WHERE parent_brand.pbname = hotel.pbname AND hotel.hotel_id = room.hotel_id AND parent_brand.pbname = '"  + parent_brand + "' AND hotel.hotel_id = '" + hotel_id + "' AND room.view_type = '" + view_type + "'");
+        rs = st.executeQuery(partialQuery);
+        printResultSet(rs);
+        occupants = scanner3.nextLine();
+
+        System.out.println("\n"+"These are the possible rooms that fit your preferences please pick one. Input the room number" + "\n");
+        partialQuery = ("SELECT room_num, price, extension_capabilities, other_amenities FROM parent_brand,hotel,room WHERE parent_brand.pbname = hotel.pbname AND hotel.hotel_id = room.hotel_id AND parent_brand.pbname = '"  + parent_brand + "' AND hotel.hotel_id = '" + hotel_id + "' AND room.view_type = '" + view_type+ "' AND room.capacity >= " + occupants);
+        rs = st.executeQuery(partialQuery);
+        if (rs.isBeforeFirst() == true) {
+            printResultSet(rs);
+            room_num = scanner3.nextLine();
+
+            System.out.println("\n" + "Since you made the request today, this is your arrival date: " + String.valueOf(java.time.LocalDate.now()) + "\n");
+            arrival_date = String.valueOf(java.time.LocalDate.now());
+
+            System.out.println("What Departure Date, use YYYY-MM-DD format");
+            departure_date = scanner3.nextLine();
+
+            //Gets the price for the room
+            partialQuery = ("SELECT price FROM parent_brand,hotel,room WHERE parent_brand.pbname = hotel.pbname AND hotel.hotel_id = room.hotel_id AND parent_brand.pbname = '"  + parent_brand + "' AND hotel.hotel_id = '" + hotel_id + "' AND room.room_num = " + room_num + "");
+            rs = st.executeQuery(partialQuery);
+            while (rs.next()){
+                price = rs.getString(1);
+                }
+
+            System.out.println("\n" + "Checking room avaliability");
+            if (overlapsWithExisting() == false) {
+                System.out.println("The room is avaliable, creating your renting now");
+                foundRoom = true;
+                st = db.createStatement();
+                partialQuery = ("INSERT INTO renting VALUES (" + "(SELECT (COUNT(renting.renting_id) + 1) FROM renting)" + ", " + price + ", " + "false, '" + arrival_date + "', '" + departure_date + "', " + betweenDates(arrival_date, departure_date) + ", " + room_num + ", " + hotel_id + ", " + sin + ")");
+                st.executeUpdate(partialQuery);
+                System.out.println("\n" + "Once an employee accepts your renting request you will have access to your room and in renting information paid_for will equal true");
+                System.out.println("Please check again later for your renting information to update" + "\n");
+            }
+            else {
+                System.out.println("\n"+ "Room not avaliable please start again");
+                System.out.println("Would you like to try again, type Y or N" + "\n");
+                foundRoom = false;
+                if (scanner3.nextLine().equals("N")) {
+                    quit = true;
+                }
+            }
+        }
+        else {
+            System.out.println("\n" + "No rooms are good enough for your preferences, try being less picky this time");
+            System.out.println("Would you like to try again, type Y or N" + "\n");
+            if (scanner3.nextLine().equals("N")) {
+                quit = true;
+            }
+            foundRoom = false;
+        }
+        }
+    }
 
 
     public ResultSet currentBookings() throws SQLException {

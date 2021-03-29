@@ -32,7 +32,7 @@ public class connection {
 						customer.CustomerCase();
 						break;
 					case ("0"):
-						System.out.println("Thank you for using our service. Goodbye!");
+						System.out.println("Thank you for using our service. Goodbye!" + "\n");
 						System.exit(0);
 						break;
 					default:
