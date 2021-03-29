@@ -1,6 +1,5 @@
 import java.math.BigInteger;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -8,20 +7,16 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Scanner;
 import java.time.LocalDate;
-import java.time.Month;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.Temporal;
-import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
 public class Customer {
     protected String sin;
-    private String firstName;
-    private String middleName;
-    private String lastName;
-    private String address;
-    private String date_of_registration;
+    protected String firstName;
+    protected String middleName;
+    protected String lastName;
+    protected String address;
+    protected String date_of_registration;
 
     private String view_type;
     private String occupants;
@@ -38,9 +33,9 @@ public class Customer {
 
     private String accountAlready;
     private String partialQuery;
-    //default
     private String customerTask = "23";
 
+    //important database variables
     private Connection db;
     private Statement st;
     private Statement yu;
@@ -56,7 +51,6 @@ public class Customer {
   }
       //attempts to connect to the database, needs password and username
     try {
-          //DATABASE CONNECTION NOT WORKING NEED HELP 
           this.db = DriverManager.getConnection("jdbc:postgresql://web0.site.uottawa.ca:15432/group_b03_g30"
           ,"elu032", "Qw300114727oP!");
           //initialize variable that will hold the statement to be executed
@@ -88,7 +82,7 @@ public class Customer {
             System.out.println("Please Enter Your last name:" + "\n");
             this.lastName = scanner.nextLine();
             System.out.println("Please Enter Your address:" + "\n");
-            this.sin = scanner.nextLine();
+            this.address = scanner.nextLine();
             //sets the value of to current time
             this.date_of_registration = String.valueOf(java.time.LocalDate.now());
             createCustomerAccount();
@@ -97,13 +91,13 @@ public class Customer {
         getandPrintCustomerInfo();
         System.out.println("\n" + "--- You are now logged in.");
         loggedInTask();
-        scanner.close();
     }
 
     public void loggedInTask() throws SQLException {
-        Scanner scanner = new Scanner(System.in);
+        
         //default value
         while (!customerTask.equals("0")) {
+            Scanner scanner = new Scanner(System.in);
             System.out.println("\n" + "What would you like to do?");
             System.out.println("1: View current Bookings");
             System.out.println("2: View current Rentings");
@@ -129,7 +123,7 @@ public class Customer {
                 	System.out.println("--- Please enter a valid number.");
             }
         }
-        scanner.close();
+        
     }
 
     public void getandPrintCustomerInfo() throws SQLException {
@@ -150,11 +144,11 @@ public class Customer {
     //Will create a new customer account
     public void createCustomerAccount() throws SQLException {
         st = db.createStatement(); 
-        partialQuery = ("INSERT INTO customer VALUES (" + sin + ", " + firstName + ", " + middleName + ", " + lastName + ", " + address+ ", " + date_of_registration +")" );
-        st.executeQuery(partialQuery);
+        partialQuery = ("INSERT INTO customer VALUES ("+ sin + ", '" + firstName + "', '" + middleName + "', '" + lastName + "', '" + address + "', '" + date_of_registration +"')" );
+        st.executeUpdate(partialQuery);
     }
 
-    public boolean createBooking() throws SQLException {
+    public void createBooking() throws SQLException {
         Scanner scanner2 = new Scanner(System.in);
         ResultSet rs;
         foundRoom = false;
@@ -186,7 +180,10 @@ public class Customer {
         view_type = scanner2.nextLine();
 
         //gets the amount of occupants
-        System.out.println("\n" +"How many occupants?");
+        System.out.println("\n" +"How many occupants? These are the ones avaliable at the hotel");
+        partialQuery = ("SELECT DISTINCT capacity FROM parent_brand,hotel,room WHERE parent_brand.pbname = hotel.pbname AND hotel.hotel_id = room.hotel_id AND parent_brand.pbname = '"  + parent_brand + "' AND hotel.hotel_id = '" + hotel_id + "' AND room.view_type = '" + view_type + "'");
+        rs = st.executeQuery(partialQuery);
+        printResultSet(rs);
         occupants = scanner2.nextLine();
 
         System.out.println("\n"+"These are the possible rooms that fit your preferences please pick one. Input the room number" + "\n");
@@ -208,6 +205,7 @@ public class Customer {
                 st = db.createStatement();
                 partialQuery = ("INSERT INTO booking VALUES (" + "(SELECT (COUNT(booking.booking_id) + 1) FROM booking)" + ", '" + view_type+ "', " + occupants + ", '" + arrival_date + "', '" + departure_date + "', " + betweenDates(arrival_date, departure_date) + ", " + room_num + ", " + hotel_id + ", " + sin + ")");
                 st.executeUpdate(partialQuery);
+                System.out.println("Congrats your booking has been accepted" + "\n");
             }
             else {
                 System.out.println("\n"+ "Room not avaliable please start again");
@@ -226,10 +224,7 @@ public class Customer {
             }
             foundRoom = false;
         }
-        
         }
-        scanner2.close();
-        return true;
     }
 
 
@@ -248,6 +243,7 @@ public class Customer {
         return rs;
     }
 
+    //Gets the amount of days between two dates
     public String betweenDates(String date1, String date2) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate localDate1 = LocalDate.parse(date1, formatter);
@@ -256,6 +252,7 @@ public class Customer {
         return (String.valueOf(ChronoUnit.DAYS.between(localDate1, localDate2)));
     }
 
+    //checks if booking dates chosen overlap with ones already in the system
     public boolean overlapsWithExisting() throws SQLException {
         st = db.createStatement(); 
         yu = db.createStatement();
@@ -284,8 +281,6 @@ public class Customer {
         }
         return false;
     }
-
-
 
 
     //

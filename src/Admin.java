@@ -26,7 +26,6 @@ public class Admin {
 	}
 		//attempts to connect to the database, needs password and username
 	  try {
-		//DATABASE CONNECTION NOT WORKING NEED HELP 
 		this.db = DriverManager.getConnection("jdbc:postgresql://web0.site.uottawa.ca:15432/group_b03_g30"
 		,"elu032", "Qw300114727oP!");
 
@@ -42,9 +41,9 @@ public class Admin {
   public void AdminCase() throws SQLException {
 	  
 	  Scanner scanner = new Scanner(System.in);  // Create a Scanner object
-	  System.out.println("\n" + "Welcome Admin! What would you like to do? Type the corresponding number:" + "\n");
-
+	  
 	  while (AdminTask != "0") {
+		System.out.println("\n" + "Welcome Admin! What would you like to do? Type the corresponding number:" + "\n");
 	    System.out.println("1: Select");
 	    System.out.println("2: Insert");
 	    System.out.println("3: Delete");

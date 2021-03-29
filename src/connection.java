@@ -5,9 +5,9 @@ public class connection {
 		public static void main(String[] args) throws SQLException {
 
 			String personType = "1";
-
+			Scanner scanner = new Scanner(System.in);
 			while (personType != "0"){ 
-				Scanner scanner = new Scanner(System.in);
+				
 				System.out.println("\n\n" + "What Would You Like To Log In As? Type the number:" + "\n");
 				System.out.println("1: Admin");
 				System.out.println("2: Employee");
