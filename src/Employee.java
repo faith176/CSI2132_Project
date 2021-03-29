@@ -187,6 +187,15 @@ public class Employee {
 
     public void createRentings() throws SQLException {
     	
+    	/*renting_id INTEGER, 
+        balance NUMERIC(8,2), 
+        paid_for BOOLEAN, 
+        arrival_date DATE,
+        departure_date DATE,
+        duration_of_stay INTEGER, --JAVA OR A FUNCTION FILLS THIS VALUE !!!
+        room_num INTEGER,
+    	hotel_id INTEGER,
+        sin INTEGER*/
     }
 
     public void convertBookings() throws SQLException {

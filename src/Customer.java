@@ -73,7 +73,7 @@ public class Customer {
             this.sin = scanner.nextLine();
         }
 	    else if (accountAlready.equals("N")) {
-            System.out.println("Please Enter Your SIN number to log in:" + "\n");
+            System.out.println("Please Enter Your SIN number:" + "\n");
             this.sin = scanner.nextLine();
             System.out.println("Please Enter Your first name:" + "\n");
             this.firstName = scanner.nextLine();
