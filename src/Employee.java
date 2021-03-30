@@ -119,7 +119,6 @@ public class Employee {
 		getEmployeeInfo();
         
         // login unsuccessful
-        // TODO make this work
         if (!rs.next()) {
         	Scanner scanner = new Scanner(System.in);
             System.out.println("Login unsuccessful. Would you like to return to the home page or try again?");
