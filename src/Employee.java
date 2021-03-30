@@ -32,6 +32,7 @@ public class Employee {
 	public Statement nr; 
 	public Statement qw;
     
+    String booking_id;
     String arrival_date;
     String departure_date;
     String duration_of_stay;
@@ -120,7 +121,7 @@ public class Employee {
         
         // login unsuccessful
         // TODO make this work
-        if (rs.isBeforeFirst() && rs.isAfterLast()) {
+        if (rs.next()) {
         	Scanner scanner = new Scanner(System.in);
             System.out.println("Login unsuccessful. Would you like to return to the home page or try again?");
             System.out.println("1: Return");
@@ -200,17 +201,9 @@ public class Employee {
 		salary = scanner.nextLine();
 		System.out.println("\n" + "Enter your manager SIN: " + "\n");
 		manager_sin = scanner.nextLine();
-    	//System.out.println("SHSHS");
 		st = db.createStatement(); 
-        //partialQuery = ("INSERT INTO employee VALUES (" + sin + ",'" + first_name + "','" + middle_name + "','" + last_name + "','" + address + "'," + salary + "," + manager_sin + ")");
-        
-        st.executeUpdate("INSERT INTO employee VALUES (" + sin + ",'" + first_name + "','" + middle_name + "','" + last_name + "','" + address + "'," + salary + "," + manager_sin + ")");
-        
-        
-        //st.executeQuery(partialQuery);
-        //String secondQuery = ("SELECT * FROM employee WHERE sin =" + sin + ")");
-        //ResultSet rs = st.executeQuery(secondQuery);
-        //printResultSet(rs);
+        st.executeUpdate("INSERT INTO employee VALUES (" + sin + ",'" + first_name + "','" + middle_name + "','" 
+        				+ last_name + "','" + address + "'," + salary + "," + manager_sin + ")");
         System.out.println("\n\n" + "--- employee account created" + "\n\n");
     }
 
@@ -301,25 +294,25 @@ public class Employee {
 		return true;
     }
 
-
+    // function to convert booking to renting
     public void convertBookings() throws SQLException {
-    	String booking_id;
     	Scanner scanner = new Scanner(System.in);
+    	// retrieve the customer's booking id
     	System.out.println("Enter customer's booking id: ");
     	booking_id = scanner.nextLine();
+    	// query to retrieve booking information to insert into renting
     	st = db.createStatement(); 
         String p = ("SELECT * FROM booking WHERE booking_id = " + booking_id);
         ResultSet rd = st.executeQuery(p);
         if (rd.next()) {
-        	
-        	arrival_date = rd.getString(4); // dates
+        	arrival_date = rd.getString(4); 
             departure_date = rd.getString(5);
             duration_of_stay = rd.getString(6);
             room_num = rd.getString(7);
             hotel_id = rd.getString(8);
             sin = rd.getString(9);
         }
-        
+        // query to get the room price
         st = db.createStatement(); 
         partialQuery = ("SELECT price FROM room WHERE room_num = " + room_num);
         ResultSet rs = st.executeQuery(partialQuery);
@@ -327,8 +320,9 @@ public class Employee {
         if (rs.next()) {
         	price = rs.getString(1);
         }
+        // calculate the balance
         balance = Float.toString(Float.parseFloat(duration_of_stay)*Float.parseFloat(price)); // numeric
-        boolean paid_for;
+        // query to get the max renting id, the new id will be max + 1
         st = db.createStatement(); 
         partialQuery = ("SELECT MAX(renting_id) FROM renting");
         rs = st.executeQuery(partialQuery);
@@ -336,6 +330,7 @@ public class Employee {
         	int ridi = Integer.parseInt(rs.getString(1)) + 1;
             renting_id = Integer.toString(ridi);
         }
+        // to determine paid_for
     	System.out.println("Has the customer paid for the room yet? (Y or N): ");
     	String pf = scanner.nextLine();
     	if (pf.toUpperCase().equals("Y")) {
@@ -344,8 +339,7 @@ public class Employee {
     	else {
     		paid_for = false;
     	}   
-    	// query to add renting to schema
-    	System.out.println(sin);
+    	// query to insert into renting 
     	st = db.createStatement(); 
         partialQuery = ("INSERT INTO renting VALUES (" + renting_id + "," + balance + "," + paid_for + ", '" + arrival_date + 
         		"','" + departure_date + "'," + duration_of_stay + "," + room_num + "," + hotel_id + "," + sin + ")");
@@ -361,12 +355,10 @@ public class Employee {
         	switch(todo_entered) {
 				case ("1"):
 					todo = "Convert";
-					System.out.println("DO SOMETHING");
 					convertBookings();
 					break;
 				case ("2"):
 					todo = "Rent";
-					System.out.println("DO SOMETHING");
 					createRentings();
 					break;
 				case ("0"):
@@ -377,8 +369,6 @@ public class Employee {
 					System.out.println("Please enter a valid number.");
 			}
         }
-        
-    	
     }
 
 
