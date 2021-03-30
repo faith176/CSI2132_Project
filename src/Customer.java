@@ -17,6 +17,7 @@ public class Customer {
     protected String lastName;
     protected String address;
     protected String date_of_registration;
+    protected String phone;
 
     private String view_type;
     private String price;
@@ -86,6 +87,8 @@ public class Customer {
             this.address = scanner.nextLine();
             //sets the value of to current time
             this.date_of_registration = String.valueOf(java.time.LocalDate.now());
+            System.out.println("Please Enter Your phone number:" + "\n");
+            this.phone = scanner.nextLine();
             createCustomerAccount();
 		}
 
@@ -137,6 +140,7 @@ public class Customer {
             this.lastName = getLastName();
             this.address = getAddress();
             this.date_of_registration = getDateOfRegistration();
+            this.phone = getPhone();
 
             System.out.println("\n" + "Customer Info Is: ");
             System.out.println(firstName);
@@ -144,12 +148,13 @@ public class Customer {
             System.out.println(lastName);
             System.out.println(address);
             System.out.println(date_of_registration);
+            System.out.println(phone);
     }
 
     //Will create a new customer account
     public void createCustomerAccount() throws SQLException {
         st = db.createStatement(); 
-        partialQuery = ("INSERT INTO customer VALUES ("+ sin + ", '" + firstName + "', '" + middleName + "', '" + lastName + "', '" + address + "', '" + date_of_registration +"')" );
+        partialQuery = ("INSERT INTO customer VALUES ("+ sin + ", '" + firstName + "', '" + middleName + "', '" + lastName + "', '" + address + "', '" + date_of_registration +"', " + phone + ")" );
         st.executeUpdate(partialQuery);
     }
 
@@ -324,7 +329,6 @@ public class Customer {
         }
     }
 
-
     public ResultSet currentBookings() throws SQLException {
         st = db.createStatement(); 
         partialQuery = ("SELECT * FROM booking WHERE sin = " + sin);
@@ -344,7 +348,6 @@ public class Customer {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate localDate1 = LocalDate.parse(date1, formatter);
         LocalDate localDate2 = LocalDate.parse(date2, formatter);
-        //System.out.println(String.valueOf(ChronoUnit.DAYS.between(localDate1, localDate2)));
         return (String.valueOf(ChronoUnit.DAYS.between(localDate1, localDate2)));
     }
 
@@ -451,6 +454,17 @@ public class Customer {
             date_of_registration = rs.getString(1);
             }
         return date_of_registration;
+    }
+
+    public String getPhone () throws SQLException {
+        //initialize variable that will hold the statement to be executed
+		st = db.createStatement(); 
+        partialQuery = ("SELECT phone FROM customer WHERE sin = " + sin);
+        ResultSet rs = st.executeQuery(partialQuery);
+        while (rs.next()){
+            phone = rs.getString(1);
+            }
+        return phone;
     }
 
     //function that prints the results of a select query in a readable manner
