@@ -22,6 +22,15 @@ public class Employee {
 
     public Connection db;
     public Statement st; 
+    
+    String arrival_date;
+    String departure_date;
+    String duration_of_stay;
+    String room_num;
+    String hotel_id;;
+    String renting_id;
+    String balance; // numeric
+    boolean paid_for;
 
     public Employee(String sin) {
         this.sin = sin;
@@ -203,26 +212,34 @@ public class Employee {
     	System.out.println("Enter customer's booking id: ");
     	booking_id = scanner.nextLine();
     	st = db.createStatement(); 
-        partialQuery = ("SELECT * FROM booking WHERE booking_id = " + booking_id);
+        String p = ("SELECT * FROM booking WHERE booking_id = " + booking_id);
+        ResultSet rd = st.executeQuery(p);
+        if (rd.next()) {
+        	
+        	arrival_date = rd.getString(4); // dates
+            departure_date = rd.getString(5);
+            duration_of_stay = rd.getString(6);
+            room_num = rd.getString(7);
+            hotel_id = rd.getString(8);
+            sin = rd.getString(9);
+        }
+        
+        st = db.createStatement(); 
+        partialQuery = ("SELECT price FROM room WHERE room_num = " + room_num);
         ResultSet rs = st.executeQuery(partialQuery);
-        printResultSet(rs);
-        String arrival_date = rs.getString(4); // dates
-        String departure_date = rs.getString(5);
-        String duration_of_stay = rs.getString(6);
-        String room_num = rs.getString(7);
-        String hotel_id = rs.getString(8);
-        sin = rs.getString(9);
-        String renting_id;
-        String balance = "1234.00"; // numeric
+        String price = null;
+        if (rs.next()) {
+        	price = rs.getString(1);
+        }
+        balance = Float.toString(Float.parseFloat(duration_of_stay)*Float.parseFloat(price)); // numeric
         boolean paid_for;
         st = db.createStatement(); 
         partialQuery = ("SELECT MAX(renting_id) FROM renting");
         rs = st.executeQuery(partialQuery);
-        int ridi = Integer.parseInt(rs.getString(1)) + 1;
-        renting_id = Integer.toString(ridi);
-        // TODO balance?
-        //System.out.println("Enter customer's booking id: ");
-    	//booking_id = scanner.nextLine();
+        if (rs.next()) {
+        	int ridi = Integer.parseInt(rs.getString(1)) + 1;
+            renting_id = Integer.toString(ridi);
+        }
     	System.out.println("Has the customer paid for the room yet? (Y or N): ");
     	String pf = scanner.nextLine();
     	if (pf.toUpperCase().equals("Y")) {
@@ -232,10 +249,11 @@ public class Employee {
     		paid_for = false;
     	}   
     	// query to add renting to schema
+    	System.out.println(sin);
     	st = db.createStatement(); 
-        partialQuery = ("INSERT INTO renting VALUES (" + renting_id + "," + balance + "," + paid_for + "," + arrival_date + 
-        		"," + departure_date + "," + duration_of_stay + "," + room_num + hotel_id + "," + sin + ")");
-        rs = st.executeQuery(partialQuery);
+        partialQuery = ("INSERT INTO renting VALUES (" + renting_id + "," + balance + "," + paid_for + ", '" + arrival_date + 
+        		"','" + departure_date + "'," + duration_of_stay + "," + room_num + "," + hotel_id + "," + sin + ")");
+        st.executeUpdate(partialQuery);
         System.out.println("\n--- Room renting was successful...");
         System.out.println("What would you like to do next? Type the corresponding number: ");
         System.out.println("1: Convert a booking to a renting");
@@ -305,4 +323,5 @@ public class Employee {
 		        System.out.println("");
 		    }
 		}
+		
 }
