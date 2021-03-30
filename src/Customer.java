@@ -35,6 +35,7 @@ public class Customer {
     private String partialQuery4;
     private String partialQuery5;
 
+    private String task = "23";
     private String accountAlready;
     private String partialQuery;
     private String customerTask = "23";
@@ -62,6 +63,8 @@ public class Customer {
           //initialize variable that will hold the statement to be executed
           this.st = db.createStatement();
           this.yu = db.createStatement();
+          this.nr = db.createStatement();
+          this.qw = db.createStatement();
     } catch(SQLException ex) {
           System.err.println("Error get information from database");
           ex.printStackTrace();
@@ -69,36 +72,52 @@ public class Customer {
     }
 
     public void CustomerCase() throws SQLException {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("\n" + "Do you already have an Account, Y or N. If you type N, you will be asked to make a new account:" + "\n");
-		accountAlready = scanner.nextLine();
+        while (!task.equals("0")) {
+            Scanner scannerx = new Scanner(System.in);
+            System.out.println("\n" + "What would you like to do?");
+            System.out.println("1: Login");
+            System.out.println("2: Create An Account");
+            System.out.println("0: Exit\n");
 
-		if (accountAlready.equals("Y")) {
-            System.out.println("Enter Customer SIN to login: ");
-            //sets the sin number as the one the user inputted, can retrieve data for this sin now
-            this.sin = scanner.nextLine();
+            task = scannerx.nextLine();
+            switch(task) {
+                case ("1"):
+                    System.out.println("Enter Customer SIN to login: ");
+                    this.sin = scannerx.nextLine();
+                    getandPrintCustomerInfo();
+                    System.out.println("\n" + "--- You are now logged in.");
+                    loggedInTask();
+                    break;
+                case ("2"):
+                    System.out.println("Please Enter Your SIN number:" + "\n");
+                    this.sin = scannerx.nextLine();
+                    System.out.println("Please Enter Your first name:" + "\n");
+                    this.firstName = scannerx.nextLine();
+                    System.out.println("Please Enter Your middle name:" + "\n");
+                    this.middleName = scannerx.nextLine();
+                    System.out.println("Please Enter Your last name:" + "\n");
+                    this.lastName = scannerx.nextLine();
+                    System.out.println("Please Enter Your address:" + "\n");
+                    this.address = scannerx.nextLine();
+                    //sets the value of to current time
+                    this.date_of_registration = String.valueOf(java.time.LocalDate.now());
+                    System.out.println("Please Enter Your phone number:" + "\n");
+                    this.phone = scannerx.nextLine();
+                    createCustomerAccount();
+
+                    getandPrintCustomerInfo();
+                    System.out.println("\n" + "--- You are now logged in.");
+                    loggedInTask();
+                    break;
+                case ("0"):
+                	System.out.println("\n" +"--- Exiting...");
+                	return;
+                default:
+                	System.out.println("\n" + "--- Please enter a valid number.");
+                    break;
+            }
         }
-	    else if (accountAlready.equals("N")) {
-            System.out.println("Please Enter Your SIN number:" + "\n");
-            this.sin = scanner.nextLine();
-            System.out.println("Please Enter Your first name:" + "\n");
-            this.firstName = scanner.nextLine();
-            System.out.println("Please Enter Your middle name:" + "\n");
-            this.middleName = scanner.nextLine();
-            System.out.println("Please Enter Your last name:" + "\n");
-            this.lastName = scanner.nextLine();
-            System.out.println("Please Enter Your address:" + "\n");
-            this.address = scanner.nextLine();
-            //sets the value of to current time
-            this.date_of_registration = String.valueOf(java.time.LocalDate.now());
-            System.out.println("Please Enter Your phone number:" + "\n");
-            this.phone = scanner.nextLine();
-            createCustomerAccount();
-		}
-
-        getandPrintCustomerInfo();
-        System.out.println("\n" + "--- You are now logged in.");
-        loggedInTask();
+        
     }
 
     public void loggedInTask() throws SQLException {
@@ -130,7 +149,6 @@ public class Customer {
                     break;
             }
         }
-        
     }
 
     public void getandPrintCustomerInfo() throws SQLException {
@@ -150,14 +168,12 @@ public class Customer {
             System.out.println(phone);
     }
 
-    //Will create a new customer account
     public void createCustomerAccount() throws SQLException {
         st = db.createStatement(); 
         partialQuery = ("INSERT INTO customer VALUES ("+ sin + ", '" + firstName + "', '" + middleName + "', '" + lastName + "', '" + address + "', '" + date_of_registration +"', " + phone + ")" );
         st.executeUpdate(partialQuery);
     }
 
-    //FOR BOOKING
     public void createBooking() throws SQLException {
         Scanner scanner2 = new Scanner(System.in);
         ResultSet rs;
@@ -260,8 +276,7 @@ public class Customer {
         return (String.valueOf(ChronoUnit.DAYS.between(localDate1, localDate2)));
     }
 
-    //checks if booking dates chosen overlap with ones already in the system
-    //checks if booking dates chosen overlap with ones already in the system
+    //checks if booking dates and renting chosen overlap with ones already in the system
     public boolean overlapsWithExisting() throws SQLException {
         st = db.createStatement(); 
         yu = db.createStatement();
@@ -312,24 +327,15 @@ public class Customer {
         return false;
     }
 
-
     //
     //Getters and Setters
     //
-
     public String getSin() throws SQLException {
         //initialize variable that will hold the statement to be executed
 		st = db.createStatement(); 
         partialQuery = ("SELECT sin FROM customer WHERE sin = " + sin);
         ResultSet rs = st.executeQuery(partialQuery);
         return rs.getString(1);
-    }
-
-    public void setSin (BigInteger newSin) throws SQLException {
-        //initialize variable that will hold the statement to be executed
-		st = db.createStatement(); 
-        partialQuery = ("UPDATE sin = " + newSin + " FROM customer WHERE sin = " + sin);
-        st.executeQuery(partialQuery);
     }
 
     public String getFirstName () throws SQLException {
