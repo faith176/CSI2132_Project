@@ -62,6 +62,8 @@ public class Customer {
           //initialize variable that will hold the statement to be executed
           this.st = db.createStatement();
           this.yu = db.createStatement();
+          this.nr = db.createStatement();
+          this.qw = db.createStatement();
     } catch(SQLException ex) {
           System.err.println("Error get information from database");
           ex.printStackTrace();
@@ -75,7 +77,6 @@ public class Customer {
 
 		if (accountAlready.equals("Y")) {
             System.out.println("Enter Customer SIN to login: ");
-            //sets the sin number as the one the user inputted, can retrieve data for this sin now
             this.sin = scanner.nextLine();
         }
 	    else if (accountAlready.equals("N")) {
@@ -130,7 +131,6 @@ public class Customer {
                     break;
             }
         }
-        
     }
 
     public void getandPrintCustomerInfo() throws SQLException {
@@ -150,14 +150,12 @@ public class Customer {
             System.out.println(phone);
     }
 
-    //Will create a new customer account
     public void createCustomerAccount() throws SQLException {
         st = db.createStatement(); 
         partialQuery = ("INSERT INTO customer VALUES ("+ sin + ", '" + firstName + "', '" + middleName + "', '" + lastName + "', '" + address + "', '" + date_of_registration +"', " + phone + ")" );
         st.executeUpdate(partialQuery);
     }
 
-    //FOR BOOKING
     public void createBooking() throws SQLException {
         Scanner scanner2 = new Scanner(System.in);
         ResultSet rs;
@@ -260,8 +258,7 @@ public class Customer {
         return (String.valueOf(ChronoUnit.DAYS.between(localDate1, localDate2)));
     }
 
-    //checks if booking dates chosen overlap with ones already in the system
-    //checks if booking dates chosen overlap with ones already in the system
+    //checks if booking dates and renting chosen overlap with ones already in the system
     public boolean overlapsWithExisting() throws SQLException {
         st = db.createStatement(); 
         yu = db.createStatement();
@@ -312,24 +309,15 @@ public class Customer {
         return false;
     }
 
-
     //
     //Getters and Setters
     //
-
     public String getSin() throws SQLException {
         //initialize variable that will hold the statement to be executed
 		st = db.createStatement(); 
         partialQuery = ("SELECT sin FROM customer WHERE sin = " + sin);
         ResultSet rs = st.executeQuery(partialQuery);
         return rs.getString(1);
-    }
-
-    public void setSin (BigInteger newSin) throws SQLException {
-        //initialize variable that will hold the statement to be executed
-		st = db.createStatement(); 
-        partialQuery = ("UPDATE sin = " + newSin + " FROM customer WHERE sin = " + sin);
-        st.executeQuery(partialQuery);
     }
 
     public String getFirstName () throws SQLException {
