@@ -267,7 +267,7 @@ public class Employee {
                 System.out.println("The room is avaliable, creating your renting now");
                 foundRoom = true;
                 st = db.createStatement();
-                partialQuery = ("INSERT INTO renting VALUES (" + "(SELECT (COUNT(renting.renting_id) + 1) FROM renting)" + ", " + total_price + ", " + "true, '" + customer_arrival_date + "', '" + customer_departure_date + "', " + betweenDates(customer_arrival_date, customer_departure_date) + ", " + customer_room_num + ", " + customer_hotel_id + ", " + customer_sin + ")");
+                partialQuery = ("INSERT INTO renting VALUES (" + "(SELECT (COUNT(renting.renting_id) + 1) FROM renting)" + ", " + total_price + ", " + "false, '" + customer_arrival_date + "', '" + customer_departure_date + "', " + betweenDates(customer_arrival_date, customer_departure_date) + ", " + customer_room_num + ", " + customer_hotel_id + ", " + customer_sin + ")");
                 st.executeUpdate(partialQuery);
                 System.out.println("\n" + "renting has been accepted");
             }
@@ -299,6 +299,7 @@ public class Employee {
     	System.out.println("Enter customer's booking id: ");
     	booking_id = scanner.nextLine();
     	// query to retrieve booking information to insert into renting
+    	
     	st = db.createStatement(); 
         String p = ("SELECT * FROM booking WHERE booking_id = " + booking_id);
         ResultSet rd = st.executeQuery(p);
@@ -328,21 +329,21 @@ public class Employee {
         	int ridi = Integer.parseInt(rs.getString(1)) + 1;
             renting_id = Integer.toString(ridi);
         }
-        // to determine paid_for
-    	System.out.println("Has the customer paid for the room yet? (Y or N): ");
-    	String pf = scanner.nextLine();
-    	if (pf.toUpperCase().equals("Y")) {
-    		paid_for = true;
-    	}
-    	else {
-    		paid_for = false;
-    	}   
+        // to determine paid_for is false; assuming that customers pay at the end of their stay
+    	paid_for = false;
+    	  
     	// query to insert into renting 
     	st = db.createStatement(); 
         partialQuery = ("INSERT INTO renting VALUES (" + renting_id + "," + balance + "," + paid_for + ", '" + arrival_date + 
         		"','" + departure_date + "'," + duration_of_stay + "," + room_num + "," + hotel_id + "," + sin + ")");
         st.executeUpdate(partialQuery);
         System.out.println("\n--- Room renting was successful...");
+        
+        // query to remove booking that has already been converted to a renting 
+    	st = db.createStatement(); 
+        partialQuery = ("DELETE FROM booking WHERE booking_id = " + booking_id);
+        st.executeUpdate(partialQuery);
+        
         System.out.println("What would you like to do next? Type the corresponding number: ");
         System.out.println("1: Convert a booking to a renting");
         System.out.println("2: Renting without a booking");
