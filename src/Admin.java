@@ -12,6 +12,15 @@ public class Admin {
   private String whereCondition;
   private String partialQuery;
   private String AdminTask;
+
+  //customer variables
+  private String customer_sin;
+  private String customer_firstName;
+  private String customer_middleName;
+  private String customer_lastName;
+  private String customer_address;
+  private String customer_date_of_registration;
+  private String customer_phone;
   
   private Connection db;
   private Statement st; 
@@ -39,7 +48,6 @@ public class Admin {
   }
   
   public void AdminCase() throws SQLException {
-	  
 	  Scanner scanner = new Scanner(System.in);  // Create a Scanner object
 	  
 	  while (AdminTask != "0") {
@@ -47,70 +55,70 @@ public class Admin {
 	    System.out.println("1: Select");
 	    System.out.println("2: Insert");
 	    System.out.println("3: Delete");
+		System.out.println("4: Create a new Employee Account");
+		System.out.println("5: Create a new Customer Account");
 		System.out.println("0: Exit");
 
 	    AdminTask = scanner.nextLine();
-	    
+	    try {
 	    switch(AdminTask) {
 	    	case ("1"):
 	    		AdminTask = "Select";
+				getInfo();
+				printResultSet(select());
 				break;
 			case ("2"):
 				AdminTask = "Insert";
+				getInfo();
+				System.out.println("Query has been executed");
 				break;
 			case ("3"):
 				AdminTask = "Delete";
+				getInfo();
+				System.out.println("Query has been executed");
+				break;
+			case ("4"):
+				System.out.println("Employee account has been created" + "\n");
+				break;
+			case ("5"):
+				getInfo();
+				createCustomerAccount();
+				System.out.println("Customer account has been created" + "\n");
 				break;
 			case ("0"):
 				System.out.println("--- Logging out of admin...");
 				return;
 			default:
 				System.out.println("--- Please enter a valid number.");
+		}   	
+	    } catch (SQLException e) {
+	    		System.out.println("--- An SQL Exception occured. Check that you spelled everything correctly.");
+	    }
+	    	System.out.println("\n\nWould you like to do anything else? Type the corresponding number:" + "\n");
 		}
+	}
 
-	    	System.out.println("Task selected is: " + AdminTask + "\n"); 
+	//gets relevant info to perform a select, insert, or delete
+	public void getInfo() throws SQLException {
+		Scanner scanner2 = new Scanner(System.in);
+		System.out.println("Task selected is: " + AdminTask + "\n"); 
 	    		
 	    	System.out.println("Input column(s) to " + AdminTask + ": "); 
-	    	column = scanner.nextLine();
+	    	column = scanner2.nextLine();
 	    		
 	    	System.out.println("Input table(s) to " + AdminTask + ": ");  
-	    	table = scanner.nextLine();
+	    	table = scanner2.nextLine();
 	    		
 	    	System.out.println("Would you like a where condition, Type Y or N: ");  
-	    	whereCondition = scanner.nextLine();
+	    	whereCondition = scanner2.nextLine();
 	    		
-	    	if (whereCondition == "Y") {
+	    	if (whereCondition.equals("Y")) {
 	    		System.out.println("Input where condition: "); 
-	    		whereCondition = scanner.nextLine();
+	    		whereCondition = scanner2.nextLine();
 	    	}
 	    	else {
 	    		whereCondition = "";
 	    	}
-	    	
-	    	System.out.println("Here are your results: \n");
-	    	try {
-				switch(AdminTask) {
-					case ("Select"):
-						printResultSet(select());
-						break;
-					case ("Insert"):
-						insert();
-						break;
-					case ("Delete"):
-						delete();
-						break;
-					default:
-						System.out.println("--- None of the cases Select/Insert/Delete were selected.");
-						break;
-				}
-				//adds a space after last output
-				System.out.print("");	
-	    	} catch (SQLException e) {
-	    		System.out.println("--- An SQL Exception occured. Check that you spelled everything correctly.");
-	    	}
-	    	
-	    	System.out.println("\n\nWould you like to do anything else? Type the corresponding number:" + "\n");
-		}
 	}
   
   public ResultSet select() throws SQLException {
@@ -141,7 +149,7 @@ public class Admin {
 			else {
 				partialQuery = ("INSERT " + column + " FROM " + table);
 			}
-			st.executeQuery(partialQuery);
+			st.executeUpdate(partialQuery);
   }
 
   
@@ -156,8 +164,30 @@ public class Admin {
 			else {
 				partialQuery = ("DELETE " + column + " FROM " + table);
 			}
-			st.executeQuery(partialQuery);
+			st.executeUpdate(partialQuery);
   }
+
+  public void createCustomerAccount() throws SQLException {
+	Scanner scannerx = new Scanner(System.in);
+	System.out.println("Please Enter Your SIN number:" + "\n");
+	this.customer_sin = scannerx.nextLine();
+	System.out.println("Please Enter Your first name:" + "\n");
+	this.customer_firstName = scannerx.nextLine();
+	System.out.println("Please Enter Your middle name:" + "\n");
+	this.customer_middleName = scannerx.nextLine();
+	System.out.println("Please Enter Your last name:" + "\n");
+	this.customer_lastName = scannerx.nextLine();
+	System.out.println("Please Enter Your address:" + "\n");
+	this.customer_address = scannerx.nextLine();
+	//sets the value of to current time
+	this.customer_date_of_registration = String.valueOf(java.time.LocalDate.now());
+	System.out.println("Please Enter Your phone number:" + "\n");
+	this.customer_phone = scannerx.nextLine();
+	
+	st = db.createStatement(); 
+	partialQuery = ("INSERT INTO customer VALUES ("+ customer_sin + ", '" + customer_firstName + "', '" + customer_middleName + "', '" + customer_lastName + "', '" + customer_address + "', '" + customer_date_of_registration +"', " + customer_phone + ")" );
+	st.executeUpdate(partialQuery);
+}
   
   
 //function that prints the results of a select query in a readable manner
