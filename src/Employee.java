@@ -154,19 +154,22 @@ public class Employee {
             System.out.println("What would you like to do? Type the corresponding number: ");
             System.out.println("1: Convert a booking to a renting");
             System.out.println("2: Renting without a booking");
+            System.out.println("3: Update if a renting was paid for");
             System.out.println("0: Exit");
             todo_entered = scanner.nextLine();
             
             	switch(todo_entered) {
     				case ("1"):
 						todo_entered = "Convert";
-    					System.out.println("DO SOMETHING");
     					convertBookings();
     					break;
     				case ("2"):
 						todo_entered = "Rent";
-    					System.out.println("DO SOMETHING");
     					createRentings();
+    					break;
+    				case ("3"):
+						todo_entered = "Update";
+    					updatePaidFor();
     					break;
     				case ("0"):
 						todo_entered = "Exit";
@@ -343,31 +346,16 @@ public class Employee {
     	st = db.createStatement(); 
         partialQuery = ("DELETE FROM booking WHERE booking_id = " + booking_id);
         st.executeUpdate(partialQuery);
-        
-        System.out.println("What would you like to do next? Type the corresponding number: ");
-        System.out.println("1: Convert a booking to a renting");
-        System.out.println("2: Renting without a booking");
-        System.out.println("0: Exit");
-        todo_entered = scanner.nextLine();
-        todo = "0";
-        while (todo.equals("0")) {
-        	switch(todo_entered) {
-				case ("1"):
-					todo = "Convert";
-					convertBookings();
-					break;
-				case ("2"):
-					todo = "Rent";
-					createRentings();
-					break;
-				case ("0"):
-					todo = "Exit";
-					System.out.println("--- Returning to main page...");
-					break;
-				default:
-					System.out.println("Please enter a valid number.");
-			}
-        }
+    }
+    
+    public void updatePaidFor() throws SQLException {
+    	Scanner scanner = new Scanner(System.in);
+    	System.out.println("Please enter the renting id that you would like to update: ");
+    	renting_id = scanner.nextLine();
+    	st = db.createStatement(); 
+        partialQuery = ("UPDATE renting SET paid_for = true WHERE renting_id = " + renting_id);
+        st.executeUpdate(partialQuery);
+        System.out.println("\n--- Update successful...");
     }
 
 
