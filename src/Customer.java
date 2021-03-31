@@ -117,7 +117,6 @@ public class Customer {
                     break;
             }
         }
-        
     }
 
     public void loggedInTask() throws SQLException {

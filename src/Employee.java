@@ -116,10 +116,12 @@ public class Employee {
     	st = db.createStatement(); 
         partialQuery = ("SELECT * FROM employee WHERE sin = " + employee_sin);
         ResultSet rs = st.executeQuery(partialQuery);
+        printResultSet(rs);
 		getEmployeeInfo();
         
         // login unsuccessful
-        if (!rs.next()) {
+        // TODO make this work
+        if (rs.next()) {
         	Scanner scanner = new Scanner(System.in);
             System.out.println("Login unsuccessful. Would you like to return to the home page or try again?");
             System.out.println("1: Return");
