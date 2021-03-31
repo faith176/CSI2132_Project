@@ -155,6 +155,7 @@ public class Employee {
             System.out.println("1: Convert a booking to a renting");
             System.out.println("2: Renting without a booking");
             System.out.println("3: Update if a renting was paid for");
+            System.out.println("4: View avaliable rooms");
             System.out.println("0: Exit");
             todo_entered = scanner.nextLine();
             
@@ -170,6 +171,10 @@ public class Employee {
     				case ("3"):
 						todo_entered = "Update";
     					updatePaidFor();
+    					break;
+                    case ("4"):
+						todo_entered = "View";
+    					roomAvalibility();
     					break;
     				case ("0"):
 						todo_entered = "Exit";
@@ -356,6 +361,23 @@ public class Employee {
         partialQuery = ("UPDATE renting SET paid_for = true WHERE renting_id = " + renting_id);
         st.executeUpdate(partialQuery);
         System.out.println("\n--- Update successful...");
+    }
+
+    public void roomAvalibility() throws SQLException {
+        //print avaliable rooms
+    	System.out.println("Avaliable rooms in the hotel: ");
+    	st = db.createStatement(); 
+        partialQuery = ("SELECT room_num, price FROM hotel, room WHERE occupied = false AND hotel.hotel_id = room.hotel_id AND hotel.hotel_id = '" + employee_hotel_id + "'");
+        ResultSet rq = st.executeQuery(partialQuery);
+        printResultSet(rq);
+        System.out.println("");
+        //Prints unavaliable rooms
+        System.out.println("Unavialble rooms in the hotel: ");
+        st = db.createStatement(); 
+        partialQuery = ("SELECT room_num, price FROM hotel, room WHERE occupied = true AND hotel.hotel_id = room.hotel_id AND hotel.hotel_id = '" + employee_hotel_id + "'");
+        ResultSet rw = st.executeQuery(partialQuery);
+        printResultSet(rw);
+        System.out.println("");
     }
 
 
