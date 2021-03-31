@@ -13,6 +13,15 @@ public class Admin {
   private String partialQuery;
   private String AdminTask;
 
+  //employee variables 
+  	private String employee_sin;
+    private String employee_first_name;
+    private String employee_middle_name;
+    private String employee_last_name;
+    private String employee_address;
+    private String employee_salary;
+    private String employee_manager_sin;
+
   //customer variables
   private String customer_sin;
   private String customer_firstName;
@@ -78,10 +87,10 @@ public class Admin {
 				System.out.println("Query has been executed");
 				break;
 			case ("4"):
+				createEmployeeAccount();
 				System.out.println("Employee account has been created" + "\n");
 				break;
 			case ("5"):
-				getInfo();
 				createCustomerAccount();
 				System.out.println("Customer account has been created" + "\n");
 				break;
@@ -169,6 +178,7 @@ public class Admin {
 
   public void createCustomerAccount() throws SQLException {
 	Scanner scannerx = new Scanner(System.in);
+	System.out.println("\n" + "--- customer account creation" + "\n\n");
 	System.out.println("Please Enter Your SIN number:" + "\n");
 	this.customer_sin = scannerx.nextLine();
 	System.out.println("Please Enter Your first name:" + "\n");
@@ -188,6 +198,29 @@ public class Admin {
 	partialQuery = ("INSERT INTO customer VALUES ("+ customer_sin + ", '" + customer_firstName + "', '" + customer_middleName + "', '" + customer_lastName + "', '" + customer_address + "', '" + customer_date_of_registration +"', " + customer_phone + ")" );
 	st.executeUpdate(partialQuery);
 }
+
+	//Will create a new employee account
+    public void createEmployeeAccount() throws SQLException {
+    	Scanner scanner = new Scanner(System.in);
+    	System.out.println("\n" + "--- employee account creation" + "\n");
+        System.out.println("\n" + "Enter your SIN: " + "\n");
+		this.employee_sin = scanner.nextLine();
+		System.out.println("\n" + "Enter your first name: " + "\n");
+		this.employee_first_name = scanner.nextLine();
+		System.out.println("\n" + "Enter your middle name: " + "\n");
+		this.employee_middle_name = scanner.nextLine();
+		System.out.println("\n" + "Enter your last name: " + "\n");
+		this.employee_last_name = scanner.nextLine();
+		System.out.println("\n" + "Enter your address: " + "\n");
+		this.employee_address = scanner.nextLine();
+		System.out.println("\n" + "Enter your salary: " + "\n");
+		this.employee_salary = scanner.nextLine();
+		System.out.println("\n" + "Enter your manager SIN: " + "\n");
+		this.employee_manager_sin = scanner.nextLine();
+		st = db.createStatement(); 
+        st.executeUpdate("INSERT INTO employee VALUES (" + employee_sin + ",'" + employee_first_name + "','" + employee_middle_name + "','" 
+        				+ employee_last_name + "','" + employee_address + "'," + employee_salary + "," + employee_manager_sin + ")");
+    }
   
   
 //function that prints the results of a select query in a readable manner
