@@ -134,6 +134,7 @@ public class Customer {
 	                    break;
 	                case ("0"):
 	                	System.out.println("\n--- Logging out of customer...");
+	                	task = "0";
 	                	return;
 	                default:
 	                	System.out.println("\n--- Please enter a valid number.");
