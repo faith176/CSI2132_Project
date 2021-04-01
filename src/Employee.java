@@ -89,7 +89,6 @@ public class Employee {
 		    	case ("1"):
 		    		todo_entered = "Login";
 		    		System.out.println("Enter Employee SIN to login: ");
-		    		// TODO error if not 9 digits
 		    		//sets the sin number as the one the user inputted, can retrieve data for this sin now
 		    		this.employee_sin = scanner.nextLine();
 		    		logIn();
@@ -154,7 +153,7 @@ public class Employee {
             System.out.println("What would you like to do? Type the corresponding number: ");
             System.out.println("1: Convert a booking to a renting");
             System.out.println("2: Renting without a booking");
-            System.out.println("3: Update if a renting was paid for");
+            System.out.println("3: Update renting to paid");
             System.out.println("4: View avaliable rooms");
             System.out.println("0: Exit");
             todo_entered = scanner.nextLine();
@@ -307,7 +306,6 @@ public class Employee {
     	System.out.println("Enter customer's booking id: ");
     	booking_id = scanner.nextLine();
     	// query to retrieve booking information to insert into renting
-    	
     	st = db.createStatement(); 
         String p = ("SELECT * FROM booking WHERE booking_id = " + booking_id);
         ResultSet rd = st.executeQuery(p);
@@ -318,6 +316,9 @@ public class Employee {
             room_num = rd.getString(7);
             hotel_id = rd.getString(8);
             sin = rd.getString(9);
+        } else {
+        	System.out.println("Booking id does not exist. Try again.\n");
+        	return;
         }
         // query to get the room price
         st = db.createStatement(); 
