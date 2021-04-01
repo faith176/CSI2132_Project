@@ -212,10 +212,10 @@ public class Admin {
 					//Defines the sql query and executes it, saving the results into variable rs
 			partialQuery = ("DELETE FROM " + table);
 			if (whereCondition != "") {
-				partialQuery = ("DELETE FROM" + table + " WHERE " + whereCondition );
+				partialQuery = ("DELETE FROM " + table + " WHERE " + whereCondition );
 			}
 			else {
-				partialQuery = ("DELETE FROM" + table);
+				partialQuery = ("DELETE FROM " + table);
 			}
 			st.executeUpdate(partialQuery);
   }
