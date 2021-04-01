@@ -84,17 +84,17 @@ public class Customer {
                 case ("1"):
                     System.out.println("Enter Customer SIN to login: ");
                     this.sin = scannerx.nextLine();
+                    // query to check if the customer sin is valid
                     st = db.createStatement(); 
-                    partialQuery = ("SELECT * FROM employee WHERE sin = " + sin);
+                    partialQuery = ("SELECT * FROM customer WHERE sin = " + sin);
                     ResultSet rs = st.executeQuery(partialQuery);
                     if (!rs.next()) {
                     	System.out.println("Login unsuccessful. Try again.");
+                    	break;
                     } 
-                    else {
-                    	getandPrintCustomerInfo();
-                        System.out.println("\n" + "--- You are now logged in.");
-                        loggedInTask();
-                    }
+                	getandPrintCustomerInfo();
+                    System.out.println("\n" + "--- You are now logged in as a customer...");
+                    loggedInTask();
                     break;
                 case ("2"):
                     System.out.println("Please Enter Your SIN number:" + "\n");
@@ -111,8 +111,15 @@ public class Customer {
                     this.date_of_registration = String.valueOf(java.time.LocalDate.now());
                     System.out.println("Please Enter Your phone number:" + "\n");
                     this.phone = scannerx.nextLine();
-                    createCustomerAccount();
-
+                    
+                    // checks if the values entered are correct
+                    if (sin.length() == 9) {
+                    	// other if statements for address and phone number?
+                    	createCustomerAccount();
+                    } else {
+                    	System.out.println("Invalid sin number. Try again.");
+                    	break;
+                    }
                     getandPrintCustomerInfo();
                     System.out.println("\n" + "--- You are now logged in.");
                     loggedInTask();

@@ -145,7 +145,7 @@ public class Employee {
         // login successful
         // 102938162
         else {
-        	System.out.println("--- Login successful...");
+        	System.out.println("--- You are now logged in as an employee...");
         	
 			todo = "0";
 			while (todo.equals("0")) {
