@@ -94,13 +94,13 @@ public class Employee {
 						break;
 					case ("0"):
 						todo_entered = "Exit";
-						System.out.println("--- Returning to main page...");
+						System.out.println("\n--- Returning to main page...");
 						return;
 					default:
-						System.out.println("--- Please enter a valid number.");
+						System.out.println("\n--- Please enter a valid number.");
 	    		}
 			} catch (SQLException e) {
-				System.out.println("--- An SQL Exception occured. Check that you spelled everything correctly.");
+				System.out.println("\n--- An SQL Exception occured. Check that you spelled everything correctly.");
 			}
 	    }
     }
@@ -126,14 +126,14 @@ public class Employee {
     				case ("1"):
     					// go back
     					todo = "good";
-    					System.out.println("--- Returning to main page...");
+    					System.out.println("\n--- Returning to main page...");
     					break;
     				case ("2"):
     					todo = "good";
     					EmployeeCase();
     					break;
     				default:
-    					System.out.println("Please enter a valid number.");
+    					System.out.println("\nPlease enter a valid number.");
     			}
             }
         }
@@ -175,13 +175,13 @@ public class Employee {
     				case ("0"):
 						todo_entered = "Exit";
 						todo= "Exit";
-    					System.out.println("--- Returning to main page...");
+    					System.out.println("\n--- Returning to main page...");
     					break;
     				default:
-    					System.out.println("Please enter a valid number.");
+    					System.out.println("\nPlease enter a valid number.");
     			}
             } catch (SQLException e) {
-				System.out.println("--- An SQL Exception occured. Check that you spelled everything correctly.");
+				System.out.println("\n--- An SQL Exception occured. Check that you spelled everything correctly.");
 			}
             }
         }

@@ -76,61 +76,36 @@ public class Customer {
             Scanner scannerx = new Scanner(System.in);
             System.out.println("\n" + "What would you like to do?");
             System.out.println("1: Login");
-            System.out.println("2: Create An Account");
             System.out.println("0: Exit\n");
 
             task = scannerx.nextLine();
-            switch(task) {
-                case ("1"):
-                    System.out.println("Enter Customer SIN to login: ");
-                    this.sin = scannerx.nextLine();
-                    // query to check if the customer sin is valid
-                    st = db.createStatement(); 
-                    partialQuery = ("SELECT * FROM customer WHERE sin = " + sin);
-                    ResultSet rs = st.executeQuery(partialQuery);
-                    if (!rs.next()) {
-                    	System.out.println("Login unsuccessful. Try again.");
-                    	break;
-                    } 
-                	getandPrintCustomerInfo();
-                    System.out.println("\n" + "--- You are now logged in as a customer...");
-                    loggedInTask();
-                    break;
-                case ("2"):
-                    System.out.println("Please Enter Your SIN number:" + "\n");
-                    this.sin = scannerx.nextLine();
-                    System.out.println("Please Enter Your first name:" + "\n");
-                    this.firstName = scannerx.nextLine();
-                    System.out.println("Please Enter Your middle name:" + "\n");
-                    this.middleName = scannerx.nextLine();
-                    System.out.println("Please Enter Your last name:" + "\n");
-                    this.lastName = scannerx.nextLine();
-                    System.out.println("Please Enter Your address:" + "\n");
-                    this.address = scannerx.nextLine();
-                    //sets the value of to current time
-                    this.date_of_registration = String.valueOf(java.time.LocalDate.now());
-                    System.out.println("Please Enter Your phone number:" + "\n");
-                    this.phone = scannerx.nextLine();
-                    
-                    // checks if the values entered are correct
-                    if (sin.length() == 9) {
-                    	// other if statements for address and phone number?
-                    	createCustomerAccount();
-                    } else {
-                    	System.out.println("Invalid sin number. Try again.");
-                    	break;
-                    }
-                    getandPrintCustomerInfo();
-                    System.out.println("\n" + "--- You are now logged in.");
-                    loggedInTask();
-                    break;
-                case ("0"):
-                	System.out.println("\n" +"--- Exiting...");
-                	return;
-                default:
-                	System.out.println("\n" + "--- Please enter a valid number.");
-                    break;
-            }
+            try {
+	            switch(task) {
+	                case ("1"):
+	                    System.out.println("Enter Customer SIN to login: ");
+	                    this.sin = scannerx.nextLine();
+	                    // query to check if the customer sin is valid
+	                    st = db.createStatement(); 
+	                    partialQuery = ("SELECT * FROM customer WHERE sin = " + sin);
+	                    ResultSet rs = st.executeQuery(partialQuery);
+	                    if (!rs.next()) {
+	                    	System.out.println("Login unsuccessful. Try again.");
+	                    	break;
+	                    } 
+	                	getandPrintCustomerInfo();
+	                    System.out.println("\n--- You are now logged in as a customer...");
+	                    loggedInTask();
+	                    break;
+	                case ("0"):
+	                	System.out.println("\n--- Exiting...");
+	                	return;
+	                default:
+	                	System.out.println("\n--- Please enter a valid number.");
+	                    break;
+	            }
+            } catch (SQLException e) {
+				System.out.println("\n--- An SQL Exception occured. Check that you spelled everything correctly.");
+			}
         }
     }
 
@@ -144,24 +119,29 @@ public class Customer {
             System.out.println("0: Exit\n");
     
             customerTask = scanner.nextLine();
-            switch(customerTask) {
-                case ("1"):
-                    printResultSet(currentBookings());
-                    break;
-                case ("2"):
-                    printResultSet(currentRentings());
-                    break;
-                case ("3"):
-                    createBooking();
-                    printResultSet(currentBookings());
-                    break;
-                case ("0"):
-                	System.out.println("\n" +"--- Logging out of customer...");
-                	return;
-                default:
-                	System.out.println("\n" + "--- Please enter a valid number.");
-                    break;
-            }
+            
+            try {
+	            switch(customerTask) {
+	                case ("1"):
+	                    printResultSet(currentBookings());
+	                    break;
+	                case ("2"):
+	                    printResultSet(currentRentings());
+	                    break;
+	                case ("3"):
+	                    createBooking();
+	                    printResultSet(currentBookings());
+	                    break;
+	                case ("0"):
+	                	System.out.println("\n--- Logging out of customer...");
+	                	return;
+	                default:
+	                	System.out.println("\n--- Please enter a valid number.");
+	                    break;
+	            }
+        	} catch (SQLException e) {
+        		System.out.println("\n--- An SQL Exception occured. Check that you spelled everything correctly.");
+        	}
         }
     }
 
@@ -180,12 +160,6 @@ public class Customer {
             System.out.println(address);
             System.out.println(date_of_registration);
             System.out.println(phone);
-    }
-
-    public void createCustomerAccount() throws SQLException {
-        st = db.createStatement(); 
-        partialQuery = ("INSERT INTO customer VALUES ("+ sin + ", '" + firstName + "', '" + middleName + "', '" + lastName + "', '" + address + "', '" + date_of_registration +"', " + phone + ")" );
-        st.executeUpdate(partialQuery);
     }
 
     public void createBooking() throws SQLException {
