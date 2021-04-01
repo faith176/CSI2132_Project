@@ -77,36 +77,32 @@ public class Employee {
 
     public void EmployeeCase() throws SQLException {
     	todo = "what";
-    	while (todo.equals("what")) {
-    		Scanner scanner = new Scanner(System.in);
-            System.out.println("\n" + "Welcome Employee, what would you like to do? Type the corresponding number:");
-            System.out.println("1: Login");
-            System.out.println("2: Create employee account");
+    	Scanner scanner = new Scanner(System.in);
+        System.out.println("\n" + "Welcome Employee, what would you like to do? Type the corresponding number:");
+	    while (todo.equals("what")) {
+	        System.out.println("1: Login");
             System.out.println("0: Exit");
     		todo_entered = scanner.nextLine();
-
-    		switch(todo_entered) {
-		    	case ("1"):
-		    		todo_entered = "Login";
-		    		System.out.println("Enter Employee SIN to login: ");
-		    		//sets the sin number as the one the user inputted, can retrieve data for this sin now
-		    		this.employee_sin = scanner.nextLine();
-		    		logIn();
-					break;
-				case ("2"):
-					todo_entered = "Create";
-					createEmployeeAccount();
-					break;
-				case ("0"):
-					todo_entered = "Exit";
-					System.out.println("--- Returning to main page...");
-					return;
-				default:
-					System.out.println("--- Please enter a valid number.");
-    		}
-				
-    	}
-        
+        	try {
+	    		switch(todo_entered) {
+			    	case ("1"):
+			    		todo_entered = "Login";
+			    		System.out.println("Enter Employee SIN to login: ");
+			    		//sets the sin number as the one the user inputted, can retrieve data for this sin now
+			    		this.employee_sin = scanner.nextLine();
+			    		logIn();
+						break;
+					case ("0"):
+						todo_entered = "Exit";
+						System.out.println("--- Returning to main page...");
+						return;
+					default:
+						System.out.println("--- Please enter a valid number.");
+	    		}
+			} catch (SQLException e) {
+				System.out.println("--- An SQL Exception occured. Check that you spelled everything correctly.");
+			}
+	    }
     }
 
     //Will use SQL to get all the data from the database and add it to this class
@@ -120,7 +116,7 @@ public class Employee {
         // login unsuccessful
         if (!rs.next()) {
         	Scanner scanner = new Scanner(System.in);
-            System.out.println("Login unsuccessful. Would you like to return to the home page or try again?");
+            System.out.println("Login unsuccessful. Would you like to return to the home page or try again? \nContact the admin if you do not have an account.");
             System.out.println("1: Return");
             System.out.println("2: Try again");
             todo_entered = scanner.nextLine();
@@ -145,12 +141,12 @@ public class Employee {
         // login successful
         // 102938162
         else {
-        	System.out.println("--- You are now logged in as an employee...");
+        	System.out.println("\n--- You are now logged in as an employee...");
         	
 			todo = "0";
 			while (todo.equals("0")) {
         	Scanner scanner = new Scanner(System.in);
-            System.out.println("What would you like to do? Type the corresponding number: ");
+            System.out.println("\nWhat would you like to do? Type the corresponding number: ");
             System.out.println("1: Convert a booking to a renting");
             System.out.println("2: Renting without a booking");
             System.out.println("3: Update renting to paid");
@@ -158,6 +154,7 @@ public class Employee {
             System.out.println("0: Exit");
             todo_entered = scanner.nextLine();
             
+            try {
             	switch(todo_entered) {
     				case ("1"):
 						todo_entered = "Convert";
@@ -183,33 +180,11 @@ public class Employee {
     				default:
     					System.out.println("Please enter a valid number.");
     			}
+            } catch (SQLException e) {
+				System.out.println("--- An SQL Exception occured. Check that you spelled everything correctly.");
+			}
             }
         }
-    }
-
-    //Will create a new employee
-    public void createEmployeeAccount() throws SQLException {
-    	boolean flag = false;
-    	Scanner scanner = new Scanner(System.in);
-    	System.out.println("\n" + "--- employee account creation" + "\n\n");
-        System.out.println("\n" + "Enter your SIN: " + "\n");
-		sin = scanner.nextLine();
-		System.out.println("\n" + "Enter your first name: " + "\n");
-		first_name = scanner.nextLine();
-		System.out.println("\n" + "Enter your middle name: " + "\n");
-		middle_name = scanner.nextLine();
-		System.out.println("\n" + "Enter your last name: " + "\n");
-		last_name = scanner.nextLine();
-		System.out.println("\n" + "Enter your address: " + "\n");
-		address = scanner.nextLine();
-		System.out.println("\n" + "Enter your salary: " + "\n");
-		salary = scanner.nextLine();
-		System.out.println("\n" + "Enter your manager SIN: " + "\n");
-		manager_sin = scanner.nextLine();
-		st = db.createStatement(); 
-        st.executeUpdate("INSERT INTO employee VALUES (" + sin + ",'" + first_name + "','" + middle_name + "','" 
-        				+ last_name + "','" + address + "'," + salary + "," + manager_sin + ")");
-        System.out.println("\n\n" + "--- employee account created" + "\n\n");
     }
 
 
@@ -366,7 +341,7 @@ public class Employee {
 
     public void roomAvalibility() throws SQLException {
         //print available rooms
-    	System.out.println("Available rooms in the hotel: ");
+    	System.out.println("\nAvailable rooms in the hotel: ");
     	st = db.createStatement(); 
         partialQuery = ("SELECT room_num, price FROM hotel, room WHERE occupied = false AND hotel.hotel_id = room.hotel_id AND hotel.hotel_id = '" + employee_hotel_id + "'");
         ResultSet rq = st.executeQuery(partialQuery);
