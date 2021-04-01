@@ -84,9 +84,17 @@ public class Customer {
                 case ("1"):
                     System.out.println("Enter Customer SIN to login: ");
                     this.sin = scannerx.nextLine();
-                    getandPrintCustomerInfo();
-                    System.out.println("\n" + "--- You are now logged in.");
-                    loggedInTask();
+                    st = db.createStatement(); 
+                    partialQuery = ("SELECT * FROM employee WHERE sin = " + sin);
+                    ResultSet rs = st.executeQuery(partialQuery);
+                    if (!rs.next()) {
+                    	System.out.println("Login unsuccessful. Try again.");
+                    } 
+                    else {
+                    	getandPrintCustomerInfo();
+                        System.out.println("\n" + "--- You are now logged in.");
+                        loggedInTask();
+                    }
                     break;
                 case ("2"):
                     System.out.println("Please Enter Your SIN number:" + "\n");
