@@ -252,7 +252,7 @@ public class Customer {
                 System.out.println("\n"+ "Room not avaliable please start again");
                 System.out.println("Would you like to try again, type Y or N" + "\n");
                 foundRoom = false;
-                if (scanner2.nextLine().equals("N")) {
+                if (scanner2.nextLine().toUpperCase().equals("N")) {
                     quit = true;
                 }
             }
@@ -260,7 +260,7 @@ public class Customer {
         else {
             System.out.println("\n" + "No rooms are good enough for your preferences, try being less picky this time");
             System.out.println("Would you like to try again, type Y or N");
-            if (scanner2.nextLine().equals("N")) {
+            if (scanner2.nextLine().toUpperCase().equals("N")) {
                 quit = true;
             }
             foundRoom = false;

@@ -282,7 +282,7 @@ public class Employee {
                 System.out.println("\n"+ "Room not avaliable please start again");
                 System.out.println("Would you like to try again, type Y or N" + "\n");
                 foundRoom = false;
-                if (scanner3.nextLine().equals("N")) {
+                if (scanner3.nextLine().toUpperCase().equals("N")) {
                     quit = true;
                 }
             }
@@ -290,7 +290,7 @@ public class Employee {
         else {
             System.out.println("\n" + "No rooms match the customer's preferences, please try again");
             System.out.println("Would you like to try again, type Y or N" + "\n");
-            if (scanner3.nextLine().equals("N")) {
+            if (scanner3.nextLine().toUpperCase().equals("N")) {
                 quit = true;
             }
             foundRoom = false;
@@ -365,15 +365,15 @@ public class Employee {
     }
 
     public void roomAvalibility() throws SQLException {
-        //print avaliable rooms
-    	System.out.println("Avaliable rooms in the hotel: ");
+        //print available rooms
+    	System.out.println("Available rooms in the hotel: ");
     	st = db.createStatement(); 
         partialQuery = ("SELECT room_num, price FROM hotel, room WHERE occupied = false AND hotel.hotel_id = room.hotel_id AND hotel.hotel_id = '" + employee_hotel_id + "'");
         ResultSet rq = st.executeQuery(partialQuery);
         printResultSet(rq);
         System.out.println("");
-        //Prints unavaliable rooms
-        System.out.println("Unavialble rooms in the hotel: ");
+        //Prints unavailable rooms
+        System.out.println("Unavailable rooms in the hotel: ");
         st = db.createStatement(); 
         partialQuery = ("SELECT room_num, price FROM hotel, room WHERE occupied = true AND hotel.hotel_id = room.hotel_id AND hotel.hotel_id = '" + employee_hotel_id + "'");
         ResultSet rw = st.executeQuery(partialQuery);
