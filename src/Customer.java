@@ -214,17 +214,17 @@ public class Customer {
             System.out.println("What Departure Date, use YYYY-MM-DD format");
             departure_date = scanner2.nextLine();
 
-            System.out.println("Checking room avaliability");
+            System.out.println("--- Checking room avaliability...");
             if (overlapsWithExisting() == false) {
-                System.out.println("The room is avaliable, creating your booking now");
+                System.out.println("--- The room is avaliable, creating your booking now.");
                 foundRoom = true;
                 st = db.createStatement();
                 partialQuery = ("INSERT INTO booking VALUES (" + "(SELECT (COUNT(booking.booking_id) + 1) FROM booking)" + ", '" + view_type+ "', " + occupants + ", '" + arrival_date + "', '" + departure_date + "', " + betweenDates(arrival_date, departure_date) + ", " + room_num + ", " + hotel_id + ", " + sin + ")");
                 st.executeUpdate(partialQuery);
-                System.out.println("Congrats your booking has been accepted" + "\n");
+                System.out.println("Congrats, your booking has been accepted!\nPLEASE REMEBER YOUR BOOKING ID\n");
             }
             else {
-                System.out.println("\n"+ "Room not avaliable please start again");
+                System.out.println("\n"+ "Room not avaliable please start again.");
                 System.out.println("Would you like to try again, type Y or N" + "\n");
                 foundRoom = false;
                 if (scanner2.nextLine().toUpperCase().equals("N")) {
@@ -233,8 +233,8 @@ public class Customer {
             }
         }
         else {
-            System.out.println("\n" + "No rooms are good enough for your preferences, try being less picky this time");
-            System.out.println("Would you like to try again, type Y or N");
+            System.out.println("\n" + "No rooms are good enough for your preferences, try being less picky this time.");
+            System.out.println("Would you like to try again? Type Y or N.");
             if (scanner2.nextLine().toUpperCase().equals("N")) {
                 quit = true;
             }
