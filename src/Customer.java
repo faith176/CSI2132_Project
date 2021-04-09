@@ -221,7 +221,7 @@ public class Customer {
                 st = db.createStatement();
                 partialQuery = ("INSERT INTO booking VALUES (" + "(SELECT (COUNT(booking.booking_id) + 1) FROM booking)" + ", '" + view_type+ "', " + occupants + ", '" + arrival_date + "', '" + departure_date + "', " + betweenDates(arrival_date, departure_date) + ", " + room_num + ", " + hotel_id + ", " + sin + ")");
                 st.executeUpdate(partialQuery);
-                System.out.println("Congrats, your booking has been accepted!\nPLEASE REMEBER YOUR BOOKING ID\n");
+                System.out.println("Congrats, your booking has been accepted!\nPLEASE REMEBER YOUR BOOKING ID. THE HOTEL EMPLOYEE WILL NEED TO VERIFY IT TO CHECK YOU IN!\n");
             }
             else {
                 System.out.println("\n"+ "Room not avaliable please start again.");
