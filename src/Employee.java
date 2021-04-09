@@ -350,7 +350,7 @@ public class Employee {
         //Prints unavailable rooms
         System.out.println("Unavailable rooms in the hotel: ");
         st = db.createStatement(); 
-        partialQuery = ("SELECT room_num, price FROM hotel, room WHERE occupied = true AND hotel.hotel_id = room.hotel_id AND hotel.hotel_id = '" + employee_hotel_id + "'");
+        partialQuery = ("SELECT  renting_id, renting.room_num, price FROM hotel, room, renting WHERE occupied = true AND hotel.hotel_id = room.hotel_id AND renting.hotel_id = hotel.hotel_id AND renting.room_num = room.room_num AND hotel.hotel_id = '" + employee_hotel_id + "'");
         ResultSet rw = st.executeQuery(partialQuery);
         printResultSet(rw);
         System.out.println("");
