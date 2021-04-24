@@ -20,7 +20,6 @@ public class Customer {
     protected String phone;
 
     private String view_type;
-    private String price;
     private String occupants;
     private String arrival_date;
     private String departure_date;
@@ -36,7 +35,6 @@ public class Customer {
     private String partialQuery5;
 
     private String task = "23";
-    private String accountAlready;
     private String partialQuery;
     private String customerTask = "23";
 
@@ -47,8 +45,7 @@ public class Customer {
     private Statement nr;
     private Statement qw;
 
-    public Customer(String sin) {
-        this.sin = sin;
+    public Customer(String username, String password) {
         //try catch statement checks to see if the appropriate library has been added
 		try {
             Class.forName("org.postgresql.Driver");
@@ -59,14 +56,14 @@ public class Customer {
       //attempts to connect to the database, needs password and username
     try {
           this.db = DriverManager.getConnection("jdbc:postgresql://web0.site.uottawa.ca:15432/group_b03_g30"
-          ,"elu032", "Qw300114727oP!");
+          ,username, password);
           //initialize variable that will hold the statement to be executed
           this.st = db.createStatement();
           this.yu = db.createStatement();
           this.nr = db.createStatement();
           this.qw = db.createStatement();
     } catch(SQLException ex) {
-          System.err.println("Error get information from database");
+          System.err.println("Error from database, username and password may be incorrect");
           ex.printStackTrace();
       }
     }

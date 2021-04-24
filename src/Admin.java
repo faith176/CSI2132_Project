@@ -34,7 +34,7 @@ public class Admin {
   private Connection db;
   private Statement st; 
 
-  public Admin() {
+  public Admin(String username, String password) {
 	//try catch statement checks to see if the appropriate library has been added
 		try {
 		      Class.forName("org.postgresql.Driver");
@@ -45,13 +45,13 @@ public class Admin {
 		//attempts to connect to the database, needs password and username
 	  try {
 		this.db = DriverManager.getConnection("jdbc:postgresql://web0.site.uottawa.ca:15432/group_b03_g30"
-		,"elu032", "Qw300114727oP!");
+		,username, password);
 
 		//initialize variable that will hold the statement to be executed
 		this.st = db.createStatement();
 
 	  } catch(SQLException ex) {
-			System.err.println("Error get information from database");
+			System.err.println("Error from database, username and password may be incorrect");
 			ex.printStackTrace();
 		}
   }

@@ -16,12 +16,6 @@ public class Employee {
 	private String employee_hotel_id;
 
 	private String sin;
-    private String first_name;
-    private String middle_name;
-    private String last_name;
-    private String address;
-    private String salary;
-    private String manager_sin;
     private String partialQuery;
     private String todo;
     private String todo_entered;
@@ -53,8 +47,8 @@ public class Employee {
 	String customer_departure_date;
 	String customer_price;
 
-    public Employee(String sin) {
-        this.sin = sin;
+    public Employee(String username, String password) {
+
         //try catch statement checks to see if the appropriate library has been added
 		try {
             Class.forName("org.postgresql.Driver");
@@ -65,12 +59,12 @@ public class Employee {
       //attempts to connect to the database, needs password and username
     try { 
           this.db = DriverManager.getConnection("jdbc:postgresql://web0.site.uottawa.ca:15432/group_b03_g30"
-          ,"elu032", "Qw300114727oP!");
+          ,username, password);
           //initialize variable that will hold the statement to be executed
           this.st = db.createStatement();
           
     } catch(SQLException ex) {
-          System.err.println("Error get information from database");
+          System.err.println("Error from database, username and password may be incorrect");
           ex.printStackTrace();
       }
     }
